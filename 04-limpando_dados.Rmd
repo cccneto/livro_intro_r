@@ -77,10 +77,11 @@ library(tidyr)
 
 O `tidyr` também tem suas funções organizadas em pequenos verbetes, onde cada um representa uma tarefa para organizar os dados. Os verbetes básicos que abordaremos são os seguintes:
 
-* gather()
-* separate()
-* spread()
-* unite()
+* `gather()`
+* `separate()`
+* `spread()`
+* `unite()`  
+* `separate_rows()`
 
 Vale lembrar que tudo que for feito usando o `tidyr` é possível executar também usando o R base, mas de uma forma um pouco menos intuitiva. Caso queira entender como usar o R base pra isso, procure mais sobre as funções `melt()` e `cast()`.
 
@@ -88,7 +89,13 @@ Vale lembrar que tudo que for feito usando o `tidyr` é possível executar tamb�
 knitr::include_graphics("imagens/tidyr.png")
 ```
 
-### Gather
+```{block, type='rmdtip'}
+<strong>Referências:</strong>
+[Site do pacote `tidyr`](https://tidyr.tidyverse.org)
+</div>
+```
+
+### gather
 
 A função `gather()` serve para agrupar duas ou mais colunas e seus respectivos valores (conteúdos) em pares. Assim, o resultado após o agrupamento é sempre duas colunas. A primeira delas possui observações cujos valores chave eram as colunas antigas e a segunda possui os valores respectivos relacionados com as colunas antigas. Na prática, a função gather diminui o número de colunas e aumenta o número de linhas de nossa base de dados.
 
@@ -114,7 +121,15 @@ tail(usa.long)
 
 No primeiro parâmetro do `gather()`, nós informamos a "chave", ou seja, a coluna que guardará o que antes era coluna. No segundo parâmetro, informamos o "value", ou seja, a coluna que guardará os valores para cada uma das antigas colunas. Repare que agora você pode afirmar com certeza que cada linha é uma observação e que cada coluna é uma variável.
 
-### Spread
+
+```{block, type='rmdtip'}
+<strong>Referências:</strong>
+[Documentação da função `gather`](https://tidyr.tidyverse.org/reference/gather.html)
+</div>
+```
+
+
+### spread
 
 É a operação antagônica do `gather()`. Ela espalha os valores de duas colunas em diversos campos para cada registro: os valores de uma coluna viram o nome das novas colunas, e os valores de outra viram valores de cada registro nas novas colunas. Usaremos a `table2` para exemplificar:
 
@@ -127,7 +142,15 @@ table2.wide <- table2 %>%
 head(table2.wide)
 ```
 
-### Separate
+
+```{block, type='rmdtip'}
+<strong>Referências:</strong>
+[Documentação da função `spread`](https://tidyr.tidyverse.org/reference/spread.html)
+</div>
+```
+
+
+### separate
 
 O `separate()` é usado para separar duas variáveis que estão em uma mesma coluna. Lembre-se: cada coluna deve ser apenas uma única variável! É muito normal virem variáveis juntas em uma única coluna, mas nem sempre isso é prejudicial, cabe avaliar quando vale a pena separá-las.
 
@@ -140,7 +163,13 @@ table3.wide <- table3 %>%
 head(table3.wide)
 ```
 
-### Unite
+```{block, type='rmdtip'}
+<strong>Referências:</strong>
+[Documentação da função `separate`](https://tidyr.tidyverse.org/reference/separate.html)
+</div>
+```
+
+### unite
 
 A operação `unite()` é o oposto da `separate()`, ela pega duas colunas (variáveis) e transforma em uma só. É muito utilizada para montar relatórios finais ou tabelas para análise visual. Aproveitemos o exemplo em `table2` para montarmos uma tabela final comparando a "case" e "population" de cada país, em cada ano.
 
@@ -152,96 +181,32 @@ table2.relatorio <- table2 %>%
 table2.relatorio
 ```
 
+```{block, type='rmdtip'}
+<strong>Referências:</strong>
+[Documentação da função `unite`](https://tidyr.tidyverse.org/reference/unite.html)
+</div>
+```
+
 O primeiro parâmetro é a coluna que desejamos criar, os próximos são as colunas que desejamos unir e, por fim, temos o `sep`, que representa algum símbolo opcional para ficar entre os dois valores na nova coluna.
 
-## Manipulação de texto
+### separate_rows
 
-Manipulação de texto também é algo importante em ciência de dados, pois nem tudo são números, existem variáveis categóricas que são baseadas em texto. Mais uma vez, esse tipo de manipulação depende do tipo de arquivo que você receber.
-
-```{r}
-a <- 'texto 1'
-b <- 'texto 2'
-c <- 'texto 3'
-paste(a, b, c)
-```
-
-O `paste()` é a função mais básica para manipulação de textos usando o R base. Ela concatena todas as variáveis textuais que você informar. Existe um parâmetro extra (`sep`) cujo valor padrão é espaço ` `.
+Do mesmo modo que `separate()` quebra uma coluna em várias, `separate_rows()` quebra uma linha em várias de acordo com um separador. Essa função é muito útil para lidar com dados sujos. Observe o exemplo:
 
 ```{r}
-paste(a, b, c, sep = '-')
-paste(a, b, c, sep = ';')
-paste(a, b, c, sep = '---%---')
+# criar dataframe de exemplo
+exemplo <- tibble(grupo = c("a", "a", "b","b"),
+                  y = c("1, 2", "3;4", "1,2,3", "4"))
+
+exemplo %>% 
+  separate_rows(y, sep = ",")
 ```
 
-### Pacote stringr
-
-Texto no R é sempre do tipo `character`. No universo da computação, também se referem a texto como `string`. E é daí que vem o nome desse pacote, também criado por Hadley Wickham. Por acaso, este pacote não está incluído no `tidyverse`.
-
-
-```{r eval=FALSE}
-install.packages('stringr')
-library(stringr)
-?stringr
+```{block, type='rmdtip'}
+<strong>Referências:</strong>
+[Documentação da função `separate_rows`](https://tidyr.tidyverse.org/reference/separate_rows.html)
+</div>
 ```
-
-```{r echo=FALSE}
-library(stringr)
-```
-
-Começaremos pela função `str_sub()`, que extrai apenas parte de um texto.
-
-```{r}
-cnae.texto <- c('10 Fabricação de produtos alimentícios', '11 Fabricação de bebidas', 
-             '12 Fabricação de produtos do fumo', '13 Fabricação de produtos têxteis', 
-             '14 Confecção de artigos do vestuário e acessórios',
-             '15 Preparação de couros e fabricação de artefatos de couro, artigos para viagem e calçados',
-             '16 Fabricação de produtos de madeira', 
-             '17 Fabricação de celulose, papel e produtos de papel')
-cnae <- str_sub(cnae.texto, 0, 2)
-texto <- str_sub(cnae.texto, 4)
-
-cnae
-texto
-```
-
-Temos também a função `str_replace()` e `str_replace_all()`, que substituem determinados caracteres por outros. Tal como no exemplo a seguir:
-
-```{r}
-telefones <- c('9931-9512', '8591-5892', '8562-1923')
-str_replace(telefones, '-', '')
-
-cnpj <- c('19.702.231/9999-98', '19.498.482/9999-05', '19.499.583/9999-50', '19.500.999/9999-46', '19.501.139/9999-90')
-str_replace_all(cnpj, '\\.|/|-', '')
-```
-
-O que são esses símbolos no segundo exemplo? São símbolos especiais utilizados em funções textuais para reconhecimento de padrão. Esses símbolos são conhecidos como **Expressões Regulares** ou o famoso **Regex**.
-
-### Regex
-
-Trata-se de um assunto bastante complexo e avançado. Não é fácil dominar regex e provavelmente você vai precisar sempre consultar e experimentar a montagem dos padrões de regex. Infelizmente não é possível aprender regex rápido e de um jeito fácil, só existe o jeito difícil: errando muito, com muita prática e experiências reais.
-
-A seguir, uma lista dos principais mecanismos de regex:
-
-  regex                            correspondência
------------ --------------------------------------
-  `^`            começa do string (ou uma negação)
-  `.`                           qualquer caractere
-  `$`                                 fim da linha
- `[maça]`      procura os caracteres `m`, `a`, `ç`
-  `maça`                                    `maça`  
-  `[0-9]`                                  números
-  `[A-Z]`                 qualquer letra maiúscula 
-  `\\w`                                uma palavra
-  `\\W`                              não é palavra 
-                          (pontuação, espaço etc.)
-  `\\s`            um espaço (tab, newline, space)
---------------------------------------------------
-
-A seguir, alguns bons sites para aprender mais sobre regex. É um assunto interessante e bastante utilizado para tratamento textual. 
-
-http://turing.com.br/material/regex/introducao.html
-
-https://regexone.com/
 
 ## Exercícios
 
@@ -252,11 +217,10 @@ senado <- read_csv('dados/senado.csv')
 
 ```
 
-
-
 1. Utilizando senado.csv, monte uma tabela mostrando a quantidade de votos sim e não por coalisão, no formato wide ("sim" e "não" são linhas e "coalisão" ou "não coalisão" são colunas). `Dica: mutate(tipo_coalisao = ifelse(GovCoalition, 'Coalisão', 'Não Coalisão'))`
 
 ```{r echo=FALSE, eval=TRUE}
+
 senado %>% 
   mutate(tipo_coalisao = ifelse(GovCoalition, 'Coalisão', 'Não Coalisão')) %>% 
   group_by(tipo_coalisao) %>% 
@@ -265,26 +229,6 @@ senado %>%
   gather(Tipo_voto, value, -tipo_coalisao) %>% 
   spread(tipo_coalisao, value) %>% 
   mutate(Tipo_voto = ifelse(Tipo_voto == 'total_n', 'Votos Não', 'Votos Sim'))
+
 ```
 
-2. Utilizando o dataframe abaixo, obtenha o resultado a seguir: `Dica: separate(), str_replace_all(), str_trim(), str_sub()`
-
-```{r}
-cadastros <- data.frame(
-  email = c('joaodasilva@gmail.com', 'rafael@hotmail.com', 'maria@uol.com.br', 'juliana.morais@outlook.com'),
-  telefone = c('(61)99831-9482', '32 8976 2913', '62-9661-1234', '15-40192.5812')
-)
-
-cadastros
-```
-
-```{r eval=TRUE, echo=FALSE}
-cadastro.clean <- cadastros %>% 
-  separate(email, c('login', 'dominio'), sep='@') %>% 
-  mutate(dominio = str_replace_all(dominio, pattern = '.com|.br', replacement = ''),
-         telefone = str_trim(str_replace_all(telefone, pattern = '[^0-9]', replacement = ' ')),
-         dd = str_sub(telefone, 0, 2),
-         telefone = str_replace_all(str_trim(str_sub(telefone, 4)), ' ', '-'))
-
-cadastro.clean
-```

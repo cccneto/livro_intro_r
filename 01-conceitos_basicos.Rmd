@@ -1,6 +1,11 @@
 
 # Conceitos Básicos
 
+```{r, echo = FALSE}
+library(tidyverse)
+```
+
+
 Entenda o R como uma grande calculadora científica cheia de botões, mas, ao invés de apertar os botões, você irá escrever os comandos. Ou seja, aprender R significa se familiarizar com os comandos e saber quando usá-los. Todos os comandos são baseados em inglês e seus nomes, normalmente, dão dicas a respeito do seu uso.
 
 ## Console
@@ -146,7 +151,7 @@ Uma vez instalado, esse pacote estará disponível para uso sempre que quiser, s
 library(dplyr)
 ```
 
-Para instalar um pacote, você precisa informar o nome entre aspas install.packages(“readxl”), caso contrário o pacote não funcionará. Porém, para carregar o pacote em memória, você pode usar com ou sem aspas library(readxl) ou library(“readxl”), ambas as formas funcionam.
+Para instalar um pacote, você precisa informar o nome entre aspas `install.packages(“readxl”)`, caso contrário o pacote não funcionará. Porém, para carregar o pacote em memória, você pode usar com ou sem aspas library(readxl) ou library(“readxl”), ambas as formas funcionam.
 
 ## Boas práticas
 
@@ -177,4 +182,17 @@ O Tidyverse foi idealizado, dentre outros responsáveis, por Hadley Wickham, um 
 
 3. Para que serve a função `rnorm()`? Quais os seus parâmetros/atributos?
 
-4. Para que serve a função `rm()`? Quais os seus parâmetros/atributos?
+4. Para que serve a função `rm()`? Quais os seus parâmetros/atributos?  
+
+5. Rode o comando abaixo para instalar os pacotes usados neste livro:  
+
+```{r, eval = FALSE}
+install.packages(c("broom", "choroplethrMaps", "dplyr", "DT", "dygraphs",
+                   "forecast", "gapminder", "ggmap", "ggplot2", "ggrepel",
+                   "ggthemes", "gridExtra", "hrbrthemes", "htmltools", "ISLR",
+                   "jsonlite", "knitr", "leaflet", "ModelMetrics",
+                   "nycflights13", "plotly", "RColorBrewer",  "readr", "readxl",
+                   "scales", "stringr", "tidyr", "tidyverse",
+                   "titanic", "viridis", "WDI", "xtable", "xts"))
+```
+

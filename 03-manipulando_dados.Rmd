@@ -52,6 +52,31 @@ class(senado)
 dim(senado)
 ```
 
+Percebeu o termo `tbl` no output acima? Significa `tibble()`, que, conforme o próprio pacote chamado `tibble` descreve, corresponde a uma moderna implementação da estrutura `data.frame`. A classe `tibble` não possui algumas deficiências da classe `data.frame`, por isso a usaremos sempre que possui. É muito simples transformar um `data.frame` em `tibble`.
+
+```{r}
+# carregando um dataset pronto do R
+data(iris)
+# verificando a classe
+class(iris)
+# transformando para tibble
+iris_tbl <- as_tibble(iris)
+# verificando a classe do novo objeto
+class(iris_tbl)
+```
+
+Imprima no seu console os dois objetos e note a diferença:
+
+```{r, eval = FALSE}
+print(iris)
+
+print(iris_tbl)
+```
+
+
+
+
+
 Outro tipo que já utilizamos bastante até agora, mas que não foi detalhado, é o `vector`, ou vetor. Vetores são sequências unidimensionais de valores de um mesmo tipo:
 
 ```{r}
@@ -412,21 +437,28 @@ library(dplyr)
 library(dplyr)
 ```
 
+```{block, type='rmdtip'}
+<strong>Referências:</strong>  
+[Site do pacote `dplyr`](https://dplyr.tidyverse.org)  
+```
+
 ### Verbetes do dplyr e o operador `%>%`
 
 O `dplyr` cobre praticamente todas as tarefas básicas da manipulação de dados: agregar, sumarizar, filtrar, ordenar, criar variáveis, joins, dentre outras.
 
 As funções do `dplyr` reproduzem as principais tarefas da manipulação, de forma bastante intuitiva. Veja só:
 
-- select()
-- filter()
-- arrange()
-- mutate()
-- group_by()
-- summarise()
+- `select()`  
+- `filter()`  
+- `arrange()`  
+- `mutate()`  
+- `group_by()`  
+- `summarise()`  
 
 Esses são os principais verbetes, mas existem outros disponíveis, como por exemplo `slice()`, `rename()` e `transmute()`. 
 Além de nomes de funções intuitivos, o `dplyr` também faz uso de um recurso disponível em boa parte dos pacotes do Hadley, o operador `%>%` (originário do pacote `magrittr`). Este operador encadeia as chamadas de funções de forma que você não vai precisar ficar chamando uma função dentro da outra ou ficar fazendo atribuições usando diversas linhas para concluir suas manipulações. Aliás, podemos dizer que esse operador `%>%`, literalmente, cria um fluxo sequencial bastante claro e legível para todas as atividades de manipulação.
+
+Os 6 principais verbetes listados acima possuem funções derivadas com os sufixos `_at`, `_if` e `_all`, que podem ser muito úteis em arquivos com muitas colunas.
 
 ### Select
 
@@ -444,6 +476,34 @@ senadores.partido <- senado %>% select(-SenatorUpper, -Party)
 head(senadores.partido)
 ```
 
+- `select_at()`:  Selecionar um conjunto de variáveis, especificadas pelo nome ou pela posição numérica, podendo aplicar uma função ao nome delas:
+
+```{r}
+# manter apenas as colunas que começam com S e transformar o nome para maiusculo
+senado %>% select_at(vars(starts_with("S")), toupper) %>% head()
+```
+
+- `select_if()`: Selecionar o conjunto de variáveis do dataframe que atende a um teste lógico:  
+
+```{r}
+# selecionar apenas as colunas numericas do dataframe
+senado %>% select_if(is.numeric) %>% head()
+```
+
+- `select_all()`: seleciona todas as colunas, opcionalmente aplicando uma função ao nome delas.  
+
+```{r}
+senado %>% select_all(tolower)
+```
+
+
+```{block, type='rmdtip'}
+<strong>Referências:</strong>  
+[Documentação da função `select()`](https://dplyr.tidyverse.org/reference/select.html)    
+[Documentação das funções derivadas de `select()`](https://dplyr.tidyverse.org/reference/select_all.html)    
+```
+
+
 ### Filter
 
 Além de escolher apenas alguns campos, você pode escolher apenas algumas linhas, utilizando alguma condição como filtragem. Para isso, basta utilizar a função `filter`.
@@ -457,17 +517,57 @@ senadores.pdt.df <- senado %>%
 head(senadores.pdt.df)
 ```
 
+```{r}
+# filtrar votações com votos SIM acima de 90% 
+senado %>% filter(PercentYes > 90) %>% head()
+```
+
+
+
+```{block, type='rmdtip'}
+<strong>Referências:</strong>  
+[Documentação da função `filter()`](https://dplyr.tidyverse.org/reference/filter.html)    
+[Documentação das funções derivadas de `filter()`](https://dplyr.tidyverse.org/reference/filter_all.html)    
+```
+
 ### Mutate
 
 Para criar novos campos, podemos usar o `mutate`:
 
 ```{r}
-senadores.pdt.df <- senado %>% 
-  select(SenatorUpper, Party, State) %>% 
-  filter(Party == 'PMDB') %>% 
-  distinct() #semelhante ao unique(), traz registros únicos sem repetição
+glimpse(senado)
+# criar coluna com o nome do senador em minusculo
+senado %>% 
+  select(SenatorUpper) %>% 
+  mutate(SenatorLower = tolower(SenatorUpper)) %>% 
+  head()
+```
 
-head(senadores.pdt.df)
+Caso o argumento da esquerda em `mutate()` seja um nome de coluna que já existe no dataframe, esta será sobrescrita:
+
+```{r}
+senado %>% 
+  mutate(Party = tolower(Party)) %>% 
+  head()
+```
+
+
+Veja como é simples realizar a operação acima, de transformar uma coluna para minúsculo, para todas as colunas de texto do dataframe com o auxílio de `mutate_if()`, na qual o primeiro argumento é um teste lógico e o segundo é a função a ser aplicada para todas as colunas onde o teste lógico seja `TRUE`.
+
+```{r}
+senado %>% 
+  # o primeiro argumento de mutate_if 
+  mutate_if(is.character, tolower) %>% 
+  head()
+
+```
+
+
+```{block, type='rmdtip'}
+<strong>Referências:</strong>
+[Documentação da função `mutate()`](https://dplyr.tidyverse.org/reference/mutate.html)    
+[Documentação das funções derivadas de `mutate()`](https://dplyr.tidyverse.org/reference/mutate_all.html)    
+</div>
 ```
 
 ### Group By e Summarise
@@ -498,14 +598,43 @@ str(flights)
 Gostaríamos de obter a média de atraso da chegada para cada mês. Para isso, primeiro agrupamos no nível necessário e depois sumarizamos.
 
 ```{r}
-media <- flights %>%
+atraso_por_mes <- flights %>%
   group_by(month) %>%
   summarise(arr_delay_media = mean(arr_delay, na.rm=TRUE), 
             dep_delay_media = mean(dep_delay, na.rm=TRUE))
 
-media
+atraso_por_mes
 ```
 
+A função `n()` retorna a quantidade de observacões (linhas) por variável especificada em `group_by()`:  
+
+```{r}
+# Quantidade de voos por hora do dia
+flights %>% 
+  group_by(carrier) %>% 
+  summarise(n_voos = n()) %>% 
+  head()
+```
+
+
+A função `n_distinct()` retorna a quantidade de casos únicos por grupo:  
+
+```{r}
+# quantas companhias aéreas diferentes operam por aeroporto por mês nos EUA?
+flights %>% 
+  group_by(origin, month) %>% 
+  summarise(n_empresas = n_distinct(carrier)) %>% 
+  head(6)
+
+```
+
+
+```{block, type='rmdtip'}
+<strong>Referências:</strong>
+[Documentação da função `group_by()`](https://dplyr.tidyverse.org/reference/group_by.html)    
+[Documentação da função `summarise()`](https://dplyr.tidyverse.org/reference/summarise.html)    
+</div>
+```
 
 ### Arrange
 
@@ -520,13 +649,27 @@ media <- flights %>%
 
 media
 ```
+
+
+```{block, type='rmdtip'}
+<strong>Referências:</strong>
+[Documentação da função `arrange()`](https://dplyr.tidyverse.org/reference/arrange.html)    
+</div>
+```
+
 ### O operador %>%
 
-Observe novamente as manipulações feitas acima. Repare que apenas acrescentamos verbetes e encadeamos a manipulação com o uso de `%>%`.
+Observe novamente as manipulações feitas acima. Repare que apenas acrescentamos verbetes e encadeamos a manipulação com o uso de `%>%`, chamado de pipe.  
 
 A primeira parte `serie.orig %>%` é a passagem onde você informa o data.frame que utilizará na sequência de manipulação. A partir daí, as chamadas seguintes `select() %>%`, `filter() %>%`, `mutate() %>%` etc, são os encadeamentos de manipulação que você pode fazer sem precisar atribuir resultados ou criar novos objetos.
 
 Em outras palavras, usando o operador `%>%`, você estará informando que um resultado da operação anterior será a entrada para a nova operação. Esse encadeamento facilita muito as coisas, tornando a manipulação mais legível e intuitiva.
+
+```{block, type='rmdtip'}
+<strong>Referências:</strong>
+[Documentação do pacote magrittr, de onde veio o pipe.`](https://magrittr.tidyverse.org)    
+</div>
+```
 
 ## Exercícios
 

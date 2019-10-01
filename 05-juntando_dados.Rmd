@@ -48,6 +48,14 @@ Tendo esse conceito simplificado de chave em mente, a primeira coisa que se deve
 
 O que acontece quando nem todos os códigos de um grupo estão no outro? E quando um grupo tem códigos repetidos em várias linhas? Para responder a essas e outras perguntas precisamos conhecer os diferentes tipos de joins. Existe pelo menos uma dezena de tipos de joins, mas 90% das vezes você precisará apenas dos tipos básicos que explicaremos a seguir. Usaremos o pacote `dplyr` para aplicar os joins. O R base possui a função `merge()` para joins, se tiver curiosidade procure mais sobre ela depois.
 
+
+```{block, type='rmdtip'}
+<strong>Referências:</strong>
+[Documentação das funções `*_join`](https://dplyr.tidyverse.org/reference/join.html)
+</div>
+```
+
+
 ### Inner Join (ou apenas Join)
 
 Trata-se do join mais simples, mais básico e mais usado dentre todos os outros tipos. O seu comportamento mantém no resultado apenas as linhas presentes nos dois conjuntos de dados que estão sendo cruzados. O inner join funciona da seguinte forma:
@@ -227,3 +235,38 @@ participantes %>%
   select(Nome, Estado, Idade, Pontuacao, Resultado)
  
 ```
+
+## Exercícios gerais do Tidyverse
+
+Para fazer as questões abaixo será necessário usar funções também dos capítulos anteriores.  
+
+0) Carregue os pacotes `tidyverse` e `janitor`.
+
+1) Baixe o dataset de [Super Heróis do Kaggle](https://www.kaggle.com/claudiodavi/superhero-set). Descompacte o arquivo e importe os dois arquivos para o R: salve o arquivo `super_hero_powers.csv` no objeto `hero_powers` e o arquivo `heroes_information.csv` no objeto `hero_info`. Use também na função `read_csv` o argumento `na = c("", "-", "NA"))` para que linhas com traço ou vazias sejam convertidas para **NA**. Observe as colunas presentes nos datasets usando a função `glimpse`.
+
+2) Use a função `janitor::clean_names()` para limpar os nomes das colunas.  
+
+3) No caso de `hero_info`, remova a primeira coluna.  
+
+4) Em `hero_powers`, converta todas as colunas com exceção da primeira para o tipo `logical`.
+
+5) Em `hero_info`, na coluna `publisher`, observe quantas editoras diferentes existem no dataset. Substitua *Marvel Comics* por *Marvel*, *DC Comics* por *DC* e todas as outras editoras pelo termo "Outros". Dica: uma das possíveis maneiras de fazer isso é usando uma combinação das funções `dplyr::mutate()` e `dplyr::case_when()`.
+
+6) Em `hero_info`, quais raças (coluna `race`) são exclusivas de cada editora? 
+
+7) Em `hero_info`, quais cores de olhos (coluna `eye_color`) são mais comuns para cada sexo (coluna `gender`)? Filtre o top 3 para cadda sexo.
+
+8) Em `hero_powers`, calcule o percentual de heróis que possui cada habilidade descrita nas colunas (Dica: é possível calcular a soma ou percentual de um vetor lógico, pois `TRUE` equivale a 1 e `FALSE` a 0). Use a função `dplyr::summarise_if` para aplicar a função em todas as colunas cuja classe é `logical`.
+
+9) Repita o item anterior, usando uma abordagem mais *tidy*: converta o formato do dataframe `hero_powers` para o formato long. Ele passará a possuir apenas 3 colunas: `hero_names`, `poder` e `possui_poder` usando a função `tidyr::gather()`. Então, calcule a média da coluna `possui_poder` agrupado pela coluna `poder`.
+
+10) Junte os dois dataframes em um só, chamado `hero`. A função a ser usada é `inner_join()`. Pense bem em qual será a ordem dos dataframes nos argumentos da função e qual será a chave usada no argumento `by` para unir as duas tabelas.
+
+11) No dataframe `hero`,  calcule o percentual de herois de cada editora que são telepatas.
+
+12) No dataframe `hero`, selecione as colunas `name`, `publisher`, `flight` e `weight`, filtre os heróis que podem voar e retorne os 10 de maior peso.
+
+13) Salve o dataframe chamado `hero` no arquivo `herois_completo.csv` usando a função `readr::write_csv()`.
+
+
+

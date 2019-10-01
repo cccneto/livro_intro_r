@@ -104,6 +104,13 @@ read_fwf('caminho/do/arquivo/arquivo_posicional.txt', col_positions = fwf_widths
 
 No capítulo a seguir exploraremos melhor os tipos de objetos mais comuns no R.
 
+```{block, type='rmdtip'}
+<strong>Referências:</strong>  
+[Site do pacote `readr` com mais exemplos](https://readr.tidyverse.org)  
+[Site do pacote `readxl`, usado para ler arquivos Excel](https://readxl.tidyverse.org)     
+```
+
+
 ## Exercícios:
 
 1. Leia o arquivo `TA_PRECOS_MEDICAMENTOS.csv`, cujo separador é uma barra `|`.
