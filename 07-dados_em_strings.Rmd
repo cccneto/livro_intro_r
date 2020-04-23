@@ -1,0 +1,332 @@
+
+# Dados em strings (texto)
+
+Neste capítulo, usaremos estes pacotes:
+
+```{r}
+library(stringr)
+library(literaturaBR) # remotes::install_github("sillasgonzaga/literaturaBR")
+```
+
+
+Manipulação de texto também é algo importante em ciência de dados, pois nem tudo são números, existem variáveis categóricas que são baseadas em texto. Mais uma vez, esse tipo de manipulação depende do tipo de arquivo que você receber.
+
+```{r}
+a <- 'texto 1'
+b <- 'texto 2'
+c <- 'texto 3'
+paste(a, b, c)
+```
+
+O `paste()` é a função mais básica para manipulação de textos usando o R base. Ela concatena todas as variáveis textuais que você informar. Existe um parâmetro extra (`sep`) cujo valor padrão é espaço ` `.
+
+```{r}
+paste(a, b, c, sep = '-')
+paste(a, b, c, sep = ';')
+paste(a, b, c, sep = '---%---')
+```
+
+## Pacote stringr
+
+Texto no R é sempre do tipo `character`. No universo da computação, também se referem a texto como `string`. E é daí que vem o nome desse pacote, também criado por Hadley Wickham. Por acaso, este pacote não está incluído no `tidyverse`.
+
+
+```{r eval=FALSE}
+library(stringr)
+?stringr
+```
+
+```{r echo=FALSE}
+library(stringr)
+```
+
+
+```{block, type='rmdtip'}
+<strong>Referências:</strong>
+[Site do pacote `stringr`](https://stringr.tidyverse.org/index.html)  
+</div>
+```
+
+
+### Extrair parte de uma string
+
+Começaremos pela função `str_sub()`, que extrai apenas parte de um texto.
+
+```{r}
+cnae.texto <- c('10 Fabricação de produtos alimentícios', '11 Fabricação de bebidas',
+                '12 Fabricação de produtos do fumo', '13 Fabricação de produtos têxteis',
+                '14 Confecção de artigos do vestuário e acessórios',
+                '15 Preparação de couros e fabricação de artefatos de couro, artigos para viagem e calçados',
+                '16 Fabricação de produtos de madeira',
+                '17 Fabricação de celulose, papel e produtos de papel')
+cnae <- str_sub(cnae.texto, 0, 2)
+texto <- str_sub(cnae.texto, 4)
+
+cnae
+texto
+```
+
+
+```{block, type='rmdtip'}
+<strong>Referências:</strong>
+[Documentação da função `str_sub()`](https://stringr.tidyverse.org/reference/str_sub.html)
+</div>
+```
+
+
+### Substituir caracteres em um string
+
+Temos também a função `str_replace()` e `str_replace_all()`, que substituem determinados caracteres por outros. Tal como no exemplo a seguir:
+
+```{r}
+telefones <- c('9931-9572', '8591-5772', '8562-1923')
+str_replace(telefones, '-', '')
+
+cnpj <- c('19.702.231/9999-98', '19.498.482/9999-05', '19.499.583/9999-50', '19.500.999/9999-46', '19.501.139/9999-90')
+str_replace_all(cnpj, '\\.|/|-', '')
+```
+
+O que são esses símbolos no segundo exemplo? São símbolos especiais utilizados em funções textuais para reconhecimento de padrão. Esses símbolos são conhecidos como **Expressões Regulares** ou o famoso **Regex**, que veremos logo a seguir.
+
+Uma função mais generalizada que `str_replace()` é a `str_glue()`:  
+
+```{r}
+meu_nome <- "Fulano"
+
+x <- c("Prazer, sou o {meu_nome}")
+print(x)
+str_glue(x)
+
+```
+
+
+```{block, type='rmdtip'}
+<strong>Referências:</strong>
+[Documentação da função `str_replace()`](https://stringr.tidyverse.org/reference/str_replace.html)
+[Documentação da função `str_glue()`](https://stringr.tidyverse.org/reference/str_glue.html)
+</div>
+```
+
+
+### Buscar correspondências em um string
+
+A função `str_count()` pode ser usada para esse objetivo:
+
+```{r}
+str_count(telefones, "7")
+```
+
+Para saber se um string contem um determinado padrão, basta usar `str_detect()`:
+
+```{r}
+str_detect(telefones, "7")
+# isso é equivalente a 
+str_count(telefones, "7") > 0
+```
+
+Para correspondências mais específicas, como no início ou no final, pode-se usar as funções `str_starts()` e `str_ends()`:  
+
+```{r}
+telefones
+str_starts(telefones, "9")
+str_ends(telefones, "0")
+```
+
+
+```{block, type='rmdtip'}
+<strong>Referências:</strong>
+[Documentação da função `str_count()`](https://stringr.tidyverse.org/reference/str_count.html)
+[Documentação da função `str_detect()`](https://stringr.tidyverse.org/reference/str_detect.html)
+</div>
+```
+
+
+### Complementar uma string
+
+Isso é essencialmente útil para transformar números em string sem perder a ordem alfabética. `str_pad()` adicionar um determinado character no início (ou no final, isso pode ser especificado pelo usuário) até que um string atinja uma determinada quantidade de caracteres.
+
+Por exemplo, sabe-se que um CPF, contando apenas os algarismos, contem 11 caracteres. Contudo, o que fazer quando você recebe um dado numérico, sem zeros a esquerda? Veja o exemplo abaixo:
+
+```{r}
+cpfs <- c(1234, 01833827570, 45614814570, 4, 4000001111)
+```
+
+Basta usar a função `str_pad()` para complementar a string acrescentando zeros a esquerda até cada string conter 11 caracteres:
+
+```{r}
+str_pad(cpfs, width = 11, pad = "0")
+```
+
+Veja que o terceiro elemento do vetor, que já continha 11 caracteres, não foi alterado.
+
+
+```{block, type='rmdtip'}
+<strong>Referências:</strong>
+[Documentação da função `str_pad()`](https://stringr.tidyverse.org/reference/str_pad.html)
+</div>
+```
+
+### Remover espaços em branco desnecessários
+
+Quando se lida com texto, é comum recebermos dados com excesso de espaço em branco, como nestes exemplos:
+
+```{r}
+x <- c("      inicio", "final      ", "      ambos      ", "    no       meio        ")
+x
+# conferindo o tamanho dos strings
+str_length(x)
+```
+
+Para isso, existe a função `str_trim()`, que remove espaços em branco seguidos no início e no final do string:
+
+```{r}
+x2 <-str_trim(x)
+x2
+# conferindo o tamanho do vetor limp
+str_length(x2)
+```
+
+A função não limpou os espaços em branco seguidos no último elemento. Para isso, você pode usar uma função mais generalizada, chamada `str_squish()`:
+
+```{r}
+x2b <- str_squish(x)
+x2b
+str_length(x2b)
+```
+
+
+## Regex
+
+Trata-se de um assunto bastante complexo e avançado. Não é fácil dominar regex e provavelmente você vai precisar sempre consultar e experimentar a montagem dos padrões de regex. Infelizmente não é possível aprender regex rápido e de um jeito fácil, só existe o jeito difícil: errando muito, com muita prática e experiências reais.
+
+A seguir, uma lista dos principais mecanismos de regex:
+
+  regex                            correspondência
+----------- --------------------------------------
+  `^`            começa do string (ou uma negação)
+`.`                           qualquer caractere
+`$`                                 fim da linha
+`[maça]`      procura os caracteres `m`, `a`, `ç`
+`maça`                                    `maça`
+`[0-9]`                                  números
+`[A-Z]`                 qualquer letra maiúscula
+`\\w`                                uma palavra
+`\\W`                              não é palavra
+(pontuação, espaço etc.)
+`\\s`            um espaço (tab, newline, space)
+--------------------------------------------------
+
+Vamos então aplicar as regex acima em um conjunto de strings:
+
+```{r}
+textos <- c("Fulano", "fulano", "abcdeF", "01584", 
+            "abc456", "123def", "OI", "meuemail@gmail.com",
+            "www.google.com", "Meu nome é Fulano")
+
+# detectar strings que contem F maiusculo
+str_detect(textos, "F")
+# detectar strings que começam com F maiúsculo
+str_detect(textos, "^F")
+# detectar strings que começam com F, independente se maiúsculo ou minúsculo
+str_detect(textos, regex("^F", ignore_case = TRUE))
+
+```
+
+`str_subset()` é uma generalização de `str_detect()` que filtra os elementos em que `str_detect()` retorna `TRUE`:
+
+```{r}
+# filtrar strings que terminam com o
+str_subset(textos, "o$")
+# strings que contem um algarismo
+str_subset(textos, "\\d")
+str_subset(textos, "[0-9]")
+# strings que terminam com um algarismo
+str_subset(textos, "\\d$")
+# strings que nao contem algarismo
+str_subset(textos, "\\d", negate = TRUE)
+# strings que contem um ponto
+str_subset(textos, "\\.")
+# strings que contem um espaço
+str_subset(textos, "\\s")
+```
+
+
+
+A seguir, alguns bons sites para aprender mais sobre regex. É um assunto interessante e bastante utilizado para tratamento textual.
+
+http://turing.com.br/material/regex/introducao.html
+
+https://regexone.com/
+
+## Exercícios
+
+1. Utilizando o dataframe abaixo, obtenha o resultado a seguir: `Dica: separate(), str_replace_all(), str_trim(), str_sub()`
+
+```{r}
+cadastros <- data.frame(
+  email = c('joaodasilva@gmail.com', 'rafael@hotmail.com', 'maria@uol.com.br', 'juliana.morais@outlook.com'),
+  telefone = c('(61)99831-9482', '32 8976 2913', '62-9661-1234', '15-40192.5812')
+)
+
+cadastros
+```
+
+```{r eval=TRUE, echo=FALSE}
+cadastro.clean <- cadastros %>% 
+  separate(email, c('login', 'dominio'), sep='@') %>% 
+  mutate(dominio = str_replace_all(dominio, pattern = '.com|.br', replacement = ''),
+         telefone = str_trim(str_replace_all(telefone, pattern = '[^0-9]', replacement = ' ')),
+         dd = str_sub(telefone, 0, 2),
+         telefone = str_replace_all(str_trim(str_sub(telefone, 4)), ' ', '-'))
+
+cadastro.clean
+```
+
+2. Baixe o pacote `literaturaBR`. Como ele não está no CRAN, é necessário usar outra função:
+
+```{r, eval = FALSE}
+remotes::install_github("sillasgonzaga/literaturaBR")
+```
+
+Importe o dataframe com os livros:
+
+```{r}
+library(literaturaBR)
+df_livros <- literaturaBR::load_all_books()
+head(df_livros)
+```
+
+
+3. Quebre cada linha da coluna text em varias, tendo uma palavra por linha, usando `separate_rows()`, e filtre as linhas da nova coluna que contem apenas letras. Salve em um novo dataframe chamado `df_livros_sep`.
+
+```{r, eval = FALSE, echo = FALSE}
+df_livros_sep <- df_livros %>% 
+  as_tibble() %>% 
+  separate_rows(text, sep = " ") %>% 
+  filter(str_detect(text, "\\w"))
+```
+
+4. Calcule o numero de palavras distintas em proporção à quantidade total de palavras por livro
+
+```{r, eval = FALSE, echo = FALSE}
+
+df_livros_sep %>% 
+  group_by(book_name) %>% 
+  summarise(n_palavras_tt = n(),
+            n_palavras_distintas = n_distinct(text),
+            taxa = n_palavras_distintas/n_palavras_tt)
+
+```
+
+5. Calcule a proporção de palavras que contem a letra `a` por livro.
+
+```{r, eval = FALSE, echo = FALSE}
+df_livros_sep %>% 
+  mutate(contem_a = ifelse(str_detect(text, "a"), 1, 0)) %>% 
+  group_by(book_name) %>% 
+  summarise(contem_a = mean(contem_a))
+
+```
+
+
+
