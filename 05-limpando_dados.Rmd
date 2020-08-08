@@ -7,11 +7,11 @@ No dia a dia de quem trabalha com dados, infelizmente, é muito comum se deparar
 
 É importante entender um pouco mais sobre como os dados podem ser estruturados antes de entrarmos nas funções de limpeza. O formato ideal para analisar dados, visualmente, é diferente do formato ideal para analisá-los de forma sistemática. Observe as duas tabelas a seguir:
 
-```{r echo=FALSE, fig.cap='Tabela wide'}
+```{r 05-limpando-dados-1, echo=FALSE, fig.cap='Tabela wide'}
 knitr::include_graphics("imagens/dados_wide.png")
 ```
 
-```{r echo=FALSE, fig.cap='Tabela long'}
+```{r 05-limpando-dados-2, echo=FALSE, fig.cap='Tabela long'}
 knitr::include_graphics("imagens/dados_long.png")
 ```
 
@@ -31,31 +31,31 @@ Na contramão da limpeza de dados, você provavelmente terá o problema contrár
 
 Para exemplificar, veja algumas tabelas disponíveis no pacote `tidyverse`, ilustrando os diferentes tipos de organização nos formatos wide e long. Todas as tabelas possuem os mesmos dados e informações:
 
-```{r message=FALSE, warning=FALSE}
+```{r 05-limpando-dados-3, message=FALSE, warning=FALSE}
 library(tidyverse)
 ```
 
-```{r}
+```{r 05-limpando-dados-4}
 table1
 ```
 
-```{r}
+```{r 05-limpando-dados-5}
 table2
 ```
 
-```{r}
+```{r 05-limpando-dados-6}
 table3
 ```
 
-```{r}
+```{r 05-limpando-dados-7}
 table4a
 ```
 
-```{r}
+```{r 05-limpando-dados-8}
 table4b
 ```
 
-```{r}
+```{r 05-limpando-dados-9}
 table5
 ```
 
@@ -65,11 +65,11 @@ Apesar de existirem diversas possibilidades de situações que necessitem de lim
 
 O pacote `tidyr` é mais um dos pacotes criados por Hadley Wickham. Este fato, por si só, já traz algumas vantagens: ele se integra perfeitamente com o `dplyr`, usando o conector `%>%`, e tem a sintaxe de suas funções bastante intuitiva.
 
-```{r, echo = FALSE, message = FALSE}
+```{r 05-limpando-dados-10, echo = FALSE, message = FALSE}
 library(tidyr)
 ```
 
-```{r, eval = FALSE}
+```{r 05-limpando-dados-11, eval = FALSE}
 install.packages("tidyr")
 library(tidyr)
 ?tidyr
@@ -77,75 +77,83 @@ library(tidyr)
 
 O `tidyr` também tem suas funções organizadas em pequenos verbetes, onde cada um representa uma tarefa para organizar os dados. Os verbetes básicos que abordaremos são os seguintes:
 
-* `gather()`
+* `pivot_longer()`  
+* `pivot_wider()`  
 * `separate()`
 * `spread()`
 * `unite()`  
 * `separate_rows()`
 
-Vale lembrar que tudo que for feito usando o `tidyr` é possível executar também usando o R base, mas de uma forma um pouco menos intuitiva. Caso queira entender como usar o R base pra isso, procure mais sobre as funções `melt()` e `cast()`.
 
-```{r echo=FALSE, fig.cap='Tabela long'}
+```{r 05-limpando-dados-12, echo=FALSE, fig.cap='Tabela long'}
 knitr::include_graphics("imagens/tidyr.png")
 ```
 
-```{block, type='rmdtip'}
+```{block 05-limpando-dados-13, type='rmdtip'}
 <strong>Referências:</strong>
 [Site do pacote `tidyr`](https://tidyr.tidyverse.org)
 
 ```
 
-### gather
+### pivot_longer()
 
-A função `gather()` serve para agrupar duas ou mais colunas e seus respectivos valores (conteúdos) em pares. Assim, o resultado após o agrupamento é sempre duas colunas. A primeira delas possui observações cujos valores chave eram as colunas antigas e a segunda possui os valores respectivos relacionados com as colunas antigas. Na prática, a função gather diminui o número de colunas e aumenta o número de linhas de nossa base de dados.
+A função `pivot_longer()`, antiga `gather()`, serve para agrupar duas ou mais colunas e seus respectivos valores (conteúdos) em pares. Assim, o resultado após o agrupamento é sempre duas colunas. A primeira delas possui observações cujos valores chave eram as colunas antigas e a segunda possui os valores respectivos relacionados com as colunas antigas. Na prática, a função gather diminui o número de colunas e aumenta o número de linhas de nossa base de dados.
 
 Usaremos dados disponíveis no R base para exemplificar:
 
-```{r}
-data("USArrests")
-
-str(USArrests)
-head(USArrests)
-# Transformando o nome das linhas em colunas
-USArrests$State <- rownames(USArrests)
-head(USArrests)
+```{r 05-limpando-dados-14}
+relig_income 
 ```
 
-```{r}
-usa.long <- USArrests %>% 
-  gather(key = "tipo_crime", value = "valor", -State)
+Para transformar a tabela acima do formato wide para o long, usamos a função:
 
-head(usa.long)
-tail(usa.long)
+```{r 05-limpando-dados-15}
+
+relig_income %>% 
+  pivot_longer(
+    # o argumento cols controla quais colunas serão (ou não serão) transformadas
+    cols = -religion,
+    #names_to controla o nome da nova coluna que irá receber os nomes das colunas transpostas
+    names_to = "renda",
+    # values_to controla o nome da nova coluna que irá recebebr os valores das colunas transpostas 
+    values_to = "quantidade")
+
 ```
 
-No primeiro parâmetro do `gather()`, nós informamos a "chave", ou seja, a coluna que guardará o que antes era coluna. No segundo parâmetro, informamos o "value", ou seja, a coluna que guardará os valores para cada uma das antigas colunas. Repare que agora você pode afirmar com certeza que cada linha é uma observação e que cada coluna é uma variável.
 
 
-```{block, type='rmdtip'}
+```{block 05-limpando-dados-16, type='rmdtip'}
 <strong>Referências:</strong>
-[Documentação da função `gather`](https://tidyr.tidyverse.org/reference/gather.html)
+[Documentação da função `pivot_longer()`](https://tidyr.tidyverse.org/reference/pivot_longer.html)
 
 ```
 
 
-### spread
+### pivot_wider()
 
-É a operação antagônica do `gather()`. Ela espalha os valores de duas colunas em diversos campos para cada registro: os valores de uma coluna viram o nome das novas colunas, e os valores de outra viram valores de cada registro nas novas colunas. Usaremos a `table2` para exemplificar:
+É a operação antagônica do `pivot_longer()`. Ela espalha os valores de duas colunas em diversos campos para cada registro: os valores de uma coluna viram o nome das novas colunas, e os valores de outra viram valores de cada registro nas novas colunas. O output tem mais colunas e menos linhas.
 
-```{r}
-head(table2)
+```{r 05-limpando-dados-17}
+us_rent_income
+```
 
-table2.wide <- table2 %>%
-  spread(key = type, value = count)
+```{r 05-limpando-dados-18}
 
-head(table2.wide)
+us_rent_income %>% 
+  pivot_wider(
+    #names_from controla de qual coluna serão criados os nomes das novas colunas
+    names_from = variable,
+    # values_from controla as colunas cujos valores serão os valores das novas colunas
+    values_from = c(estimate, moe)
+  )
+
 ```
 
 
-```{block, type='rmdtip'}
+
+```{block 05-limpando-dados-19, type='rmdtip'}
 <strong>Referências:</strong>
-[Documentação da função `spread`](https://tidyr.tidyverse.org/reference/spread.html)
+[Documentação da função `pivot_wider()`](https://tidyr.tidyverse.org/reference/pivot_wider.html)
 
 ```
 
@@ -156,14 +164,14 @@ O `separate()` é usado para separar duas variáveis que estão em uma mesma col
 
 Usaremos o exemplo da `table3` para investigar:
 
-```{r}
+```{r 05-limpando-dados-20}
 table3.wide <- table3 %>% 
   separate(rate, into = c("cases", "population"), sep='/')
 
 head(table3.wide)
 ```
 
-```{block, type='rmdtip'}
+```{block 05-limpando-dados-21, type='rmdtip'}
 <strong>Referências:</strong>
 [Documentação da função `separate`](https://tidyr.tidyverse.org/reference/separate.html)
 
@@ -173,7 +181,7 @@ head(table3.wide)
 
 A operação `unite()` é o oposto da `separate()`, ela pega duas colunas (variáveis) e transforma em uma só. É muito utilizada para montar relatórios finais ou tabelas para análise visual. Aproveitemos o exemplo em `table2` para montarmos uma tabela final comparando a "case" e "population" de cada país, em cada ano.
 
-```{r}
+```{r 05-limpando-dados-22}
 table2.relatorio <- table2 %>% 
   unite(type_year, type, year) %>% 
   spread(key = type_year, value = count, sep = '_')
@@ -181,7 +189,7 @@ table2.relatorio <- table2 %>%
 table2.relatorio
 ```
 
-```{block, type='rmdtip'}
+```{block 05-limpando-dados-23, type='rmdtip'}
 <strong>Referências:</strong>
 [Documentação da função `unite`](https://tidyr.tidyverse.org/reference/unite.html)
 
@@ -193,7 +201,7 @@ O primeiro parâmetro é a coluna que desejamos criar, os próximos são as colu
 
 Do mesmo modo que `separate()` quebra uma coluna em várias, `separate_rows()` quebra uma linha em várias de acordo com um separador. Essa função é muito útil para lidar com dados sujos. Observe o exemplo:
 
-```{r}
+```{r 05-limpando-dados-24}
 # criar dataframe de exemplo
 exemplo <- tibble(grupo = c("a", "a", "b","b"),
                   y = c("1, 2", "3;4", "1,2,3", "4"))
@@ -202,7 +210,7 @@ exemplo %>%
   separate_rows(y, sep = ",")
 ```
 
-```{block, type='rmdtip'}
+```{block 05-limpando-dados-25, type='rmdtip'}
 <strong>Referências:</strong>
 [Documentação da função `separate_rows`](https://tidyr.tidyverse.org/reference/separate_rows.html)
 
@@ -210,25 +218,9 @@ exemplo %>%
 
 ## Exercicios
 
-```{r eval=TRUE, echo=FALSE, message=FALSE, warning=FALSE}
+1. Transforme a table1 para a table2 usando pivot_longer()
 
-library(ISLR)
-senado <- read_csv('dados/senado.csv')
+2. Transforme a table2 para a table1 usando pivot_wider()
 
-```
-
-1. Utilizando senado.csv, monte uma tabela mostrando a quantidade de votos sim e não por coalisão, no formato wide ("sim" e "não" são linhas e "coalisão" ou "não coalisão" são colunas). `Dica: mutate(tipo_coalisao = ifelse(GovCoalition, 'Coalisão', 'Não Coalisão'))`
-
-```{r echo=FALSE, eval=TRUE}
-
-senado %>% 
-  mutate(tipo_coalisao = ifelse(GovCoalition, 'Coalisão', 'Não Coalisão')) %>% 
-  group_by(tipo_coalisao) %>% 
-  summarise(total_s = sum(Vote == 'S'),
-            total_n = sum(Vote == 'N')) %>% 
-  gather(Tipo_voto, value, -tipo_coalisao) %>% 
-  spread(tipo_coalisao, value) %>% 
-  mutate(Tipo_voto = ifelse(Tipo_voto == 'total_n', 'Votos Não', 'Votos Sim'))
-
-```
+3. Transforme a table5 para a table1 e para a table2
 

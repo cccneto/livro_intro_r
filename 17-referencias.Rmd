@@ -2,5 +2,9 @@
 # Referências
 
 
-Seguem algumas referências de estudo.
+Informações de sistema:
+
+```{r 17-referencias-1}
+sessioninfo::session_info()
+```
 

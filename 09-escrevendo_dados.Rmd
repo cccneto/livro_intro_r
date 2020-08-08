@@ -11,7 +11,7 @@ O formato mais básico e mais utilizado, mundialmente, para envio e recebimento 
 
 A diferença as funções `read_csv()` ou `write_csv()` e `read_csv2()` e `write_csv2()` é que as primeiras usam vírgula como delimitador de colunas e ponto como separador de decimais, já as duas últimas usam ponto e vírgula e vírgula, respectivamente.
 
-```{r, eval = FALSE}
+```{r 09-escrevendo-dados-1, eval = FALSE}
 data(iris)
 readr::write_csv(iris, "iris.csv")
 readr::write_csv2(iris, "iris2.csv")
@@ -21,7 +21,7 @@ readr::write_csv2(iris, "iris2.csv")
 
 Objetos `rds` são arquivos próprios do R e servem para salvar em arquivo local qualquer tipo de estrutura de dados, mantendo sempre todas as propriedades do objeto original. Arquivos rds podem ser salvos com a função `write_rds()`, do pacote `readr`. Para importar um arquivo rds, basta usar `readr::read_rds()`.
 
-```{r, eval = FALSE}
+```{r 09-escrevendo-dados-2, eval = FALSE}
 participantes <- tibble(
   Nome = c('Carlos', 'Maurício', 'Ana Maria', 'Rebeca', 'Patrícia'),
   Estado = c('Brasília', 'Minas Gerais', 'Goiás', 'São Paulo', 'Ceará'),
@@ -40,7 +40,7 @@ Outra forma bastante importante de escrever dados é em planilhas: o famoso Exce
 
 Um outro pacote para escrever arquivos em Excel, mais simples que o `openxlsx`, é o `writexl`:
 
-```{r, eval = FALSE}
+```{r 09-escrevendo-dados-3, eval = FALSE}
 writexl::write_xlsx(iris, "iris.xlsx")
 ```
 

@@ -1,6 +1,6 @@
 # Visualizações Interativas {#htmlwidgets}
 
-```{r, include=FALSE, warning=FALSE, message=FALSE}
+```{r 13-htmlwidgets-1, include=FALSE, warning=FALSE, message=FALSE}
 knitr::opts_chunk$set(fig.align='center', fig.width = 7, fig.asp = 0.618,
                       out.width = '100%', message = FALSE)
 library(ggplot2)
@@ -31,7 +31,7 @@ O objetivo deste capítulo é fazer uma pequena apresentação sobre alguns paco
 
 É possível ainda dar ainda mais vida aos seus gráficos os transformando em interativos de maneira muito fácil. O pacote `plotly`, além de ser um ótimo pacote para produzir gráficos interativos em R ou Python, possui uma funcão chamada `ggplotly()` que transforma um gráfico estático do ggplot2 em interativo. 
 
-```{r}
+```{r 13-htmlwidgets-2}
 # criando grafico estatico
 library(gapminder)
 
@@ -43,7 +43,7 @@ p <- gapminder %>%
 p
 ```
 
-```{r}
+```{r 13-htmlwidgets-3}
 # converter para interativo
 ggplotly(p)
 ```
@@ -53,7 +53,7 @@ Com apenas uma simples função, temos um gráfico cheio de recursos interativos
 
 Como era de se esperar, as tooltips também podem ser customizadas. A função `ggplotly` possui um parâmetro chamado `tooltip` onde pode ser especificada a *aesthetic* que será mostrada na tooltip. Por padrão, como você viu, a tooltip mostra todas as *aesthetics* definidas no gráfico. Caso você queira mudar esse aspecto, pode mudar o valor desse parâmetro em `ggplotly`:
 
-```{r, warning = FALSE}
+```{r 13-htmlwidgets-4, warning = FALSE}
 # mostrar apenas a aesthetic x,
 # na qual foi mapeada a variavel de expectativa de vida
 ggplotly(p, tooltip = "x")
@@ -68,7 +68,7 @@ Caso não conheça a função `paste0()`, ela serve para concatenar vetores de s
 
 Segue alguns exemplos:
 
-```{r}
+```{r 13-htmlwidgets-5}
 nome <- c("Lucas", "Eduardo", "Flávio")
 sobrenome <- c("Silva", "Oliveira", "Dias")
 # concatenar os dois vetores acima, juntando nome e sobrenome com espaço no meio
@@ -77,7 +77,7 @@ paste0(nome, " ", sobrenome)
 
 Usando essa função, vamos definir a `aesthetic` de forma que mostre o nome dos países e os valores das variáveis dos eixos:
 
-```{r, warning = FALSE}
+```{r 13-htmlwidgets-6, warning = FALSE}
 # refazer o grafico, definindo uma nova aesthetic chamada text:
 p <- gapminder %>% 
   filter(year == 2007) %>% 
@@ -102,7 +102,7 @@ Antes dos exemplos, será necessário falar sobre objetos de séries de tempo no
 
 Para criar um objeto de séries de tempo usaremos a função `ts()`:
 
-```{r, eval = FALSE}
+```{r 13-htmlwidgets-7, eval = FALSE}
 ts(data = NA, start = 1, end = numeric(), frequency = 1,
    deltat = 1, ts.eps = getOption("ts.eps"), class = , names = )
 ```
@@ -115,7 +115,7 @@ Os parâmetros relevantes são:
 * `frequency`: frequência dos dados. Mensal(12), Trimestral (4), Anual(1) etc.
 
 Exemplo de criação de uma série de tempo:
-```{r}
+```{r 13-htmlwidgets-8}
 x <- rnorm(24, mean = 100, sd = 10)
 # Trasnformando em série mensal a partir de janeiro de 2010
 x <- ts(x, freq = 12, start = c(2010, 1))
@@ -124,7 +124,7 @@ plot(x)
 
 Outra maneira de declarar um objeto de série de tempo é utilizando a função `xts()` do pacote de mesmo nome. No entanto, para essa função, precisamos de um vetor ordenado de datas do tipo `Date`, `POSIXct`, `timeDate`, `yearmon` e `yearqtr`.
 
-```{r}
+```{r 13-htmlwidgets-9}
 library(xts)
 xts_df <- data.frame(y = rnorm(365, 100, 10)) 
 xts_df$data <- seq.Date(as.Date("2011-01-01"), length.out = 365,
@@ -135,7 +135,7 @@ head(xts_df)
 ```
 
 
-```{r}
+```{r 13-htmlwidgets-10}
 library(dygraphs)
 lungDeaths <- cbind(mdeaths, fdeaths)
 dygraph(lungDeaths, 
@@ -148,7 +148,7 @@ dygraph(lungDeaths,
 
 Aqui fica o código para alterar os padrões dos números e datas:
 
-```{r}
+```{r 13-htmlwidgets-11}
 
 # Alterar rótulos do eixo x e a legenda
 axlabform <- "function(date, granularity, opts, dygraph) {
@@ -184,14 +184,14 @@ dygraph(lungDeaths,
 O leaflet é, provavelmente, a principal biblioteca javascript para visualizações interativas de mapas. Mais informações sobre o pacote estão disponíveis [neste link](https://rstudio.github.io/leaflet/). Para iniciarmos uma visualização com leaflet, basta executar o código abaixo. A função `addTiles()` adiciona uma camada de mapas ao leaflet que foi inicializado.
 
 
-```{r, eval=FALSE, message=FALSE}
+```{r 13-htmlwidgets-12, eval=FALSE, message=FALSE}
 library(dplyr)
 library(leaflet)
 leaflet() %>%
   addTiles()
 ```
 
-```{r, echo=FALSE, message=FALSE}
+```{r 13-htmlwidgets-13, echo=FALSE, message=FALSE}
 library(dplyr)
 library(leaflet)
 leaflet() %>%
@@ -202,7 +202,7 @@ leaflet() %>%
 
 No primeiro exemplo, incluiremos um marcador na localização do IBPAD. Para isso, obteremos a latitude e a longitude usando a função `geocode()` do pacote `ggmap`. Além disso, foi incluída uma coluna chamada `popup`, que receberá um texto que será mostrado no mapa.
 
-```{r, eval=FALSE, message = FALSE}
+```{r 13-htmlwidgets-14, eval=FALSE, message = FALSE}
 library(ggmap)
 # Pegar Localização do ibpad (Google desatualizado)
 #loc.ibpad <- geocode("IBPAD")
@@ -213,7 +213,7 @@ leaflet(loc.ibpad) %>%
   addMarkers(lat = ~lat, lng = ~lon, popup = ~popup)
 ```
 
-```{r, echo=FALSE, message = FALSE}
+```{r 13-htmlwidgets-15, echo=FALSE, message = FALSE}
 library(ggmap)
 # Pegar Localização do ibpad (Google desatualizado)
 #loc.ibpad <- geocode("IBPAD")
@@ -228,7 +228,7 @@ leaflet(loc.ibpad) %>%
 
 No exemplo abaixo, criaremos uma visualização com a posição de algumas empresas exportadoras de Mato Grosso, a partir de [dados disponibilizados pelo MDIC](http://www.mdic.gov.br/comercio-exterior/estatisticas-de-comercio-exterior/empresas-brasileiras-exportadoras-e-importadoras). Como a busca da localização foi feita usando o endereço, nem sempre a localização estará perfeitamente correta. No entanto, para exemplificar o uso do pacote, não há problemas.
 
-```{r, eval=FALSE}
+```{r 13-htmlwidgets-16, eval=FALSE}
 dados.empresas.mt <- read_delim('dados/empresas_exp_mt.csv',
                                 delim = ";", 
                                 locale = locale(encoding = 'ISO-8859-1',
@@ -238,7 +238,7 @@ leaflet(dados.empresas.mt) %>%
   addMarkers(lat = ~lat, lng = ~lon, popup = ~EMPRESA)
 ```
 
-```{r, echo=FALSE}
+```{r 13-htmlwidgets-17, echo=FALSE}
 dados.empresas.mt <- read_delim('dados/empresas_exp_mt.csv',
                                 delim = ";", 
                                 locale = locale(encoding = 'ISO-8859-1',
@@ -250,13 +250,13 @@ leaflet(dados.empresas.mt) %>%
 
 Podemos também adicionar outros tipos de marcadores, como círculos:
 
-```{r, eval=FALSE}
+```{r 13-htmlwidgets-18, eval=FALSE}
 leaflet(dados.empresas.mt) %>%
   addTiles() %>%
   addCircleMarkers(lat = ~lat, lng = ~lon, popup = ~EMPRESA, fillOpacity = 0.3)
 ```
 
-```{r, echo=FALSE}
+```{r 13-htmlwidgets-19, echo=FALSE}
 leaflet(dados.empresas.mt) %>%
   addTiles('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png') %>%
   addCircleMarkers(lat = ~lat, lng = ~lon, popup = ~EMPRESA, fillOpacity = 0.3)
@@ -264,14 +264,14 @@ leaflet(dados.empresas.mt) %>%
 
 Adicionalmente, é possível agrupar pontos próximos em clusters.
 
-```{r, eval=FALSE}
+```{r 13-htmlwidgets-20, eval=FALSE}
 leaflet(dados.empresas.mt) %>%
   addTiles() %>%
   addCircleMarkers(lat = ~lat, lng = ~lon, popup = ~EMPRESA, fillOpacity = 0.3,
                    clusterOptions = markerClusterOptions())
 ```
 
-```{r, echo=FALSE}
+```{r 13-htmlwidgets-21, echo=FALSE}
 leaflet(dados.empresas.mt) %>%
   addTiles(urlTemplate = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png') %>%
   addCircleMarkers(lat = ~lat, lng = ~lon, popup = ~EMPRESA, fillOpacity = 0.3,
@@ -285,7 +285,7 @@ Também é possível criar-se polígonos a partir de shapefiles.
 
 Para isso, o caminho mais fácil é importar um shapefile usando o pacote `sf`, criar um gráfico estático com `geom_sf()` e o converter para interativo com `plotly::ggplotly()`:
 
-```{r}
+```{r 13-htmlwidgets-22}
 # baixa
 library(brmap) # remotes::install_github("italocegatta/brmap")
 mapa_ufs <- brmap::brmap_estado

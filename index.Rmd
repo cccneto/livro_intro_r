@@ -19,7 +19,7 @@ github-repo: rstudio/bookdown-demo
 description: "Aprendendo a programar com R"
 ---
 
-```{r, include=FALSE, warning=FALSE, message=FALSE}
+```{r index-1, include=FALSE, warning=FALSE, message=FALSE}
 knitr::opts_chunk$set(fig.align='center', fig.width = 7, fig.asp = 0.618,
                       out.width = '100%')
 ```
@@ -28,7 +28,7 @@ knitr::opts_chunk$set(fig.align='center', fig.width = 7, fig.asp = 0.618,
 
 Este livro foi criado por Saulo Guerra, Paulo Felipe e Sillas Gonzaga para o curso Introdução à Ciência de Dados com R, oferecido pelo IBPAD. Para a construção deste livro, foi utilizado o Bookdown. Em alguns trechos, este livro foi baseado no material produzido por Robert McDonnell.
 
-```{r echo=FALSE}
+```{r index-2, echo=FALSE}
 knitr::include_graphics("./imagens/logo.png")
 ```
 

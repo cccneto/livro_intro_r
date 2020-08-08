@@ -27,13 +27,13 @@ São dados que também possuem uma organização fixa, porém não seguem o padr
 
 O R sempre trabalha com o conceito de _Working direcotry_, ou seja, uma pasta de trabalho onde vai "ler" e "escrever" os dados. Para verificar qual o diretório que o R está "olhando", utilize o seguinte comando:
 
-```{r eval=FALSE}
+```{r 03-lendo-dados-1, eval=FALSE}
 getwd() #Get Working Directory
 ```
 
 Para informar ao R em qual pasta ele deve ler os arquivos, utilizamos o comando _set working directory_, que muda o diretório padrão do R para leitura e escrita:
 
-```{r eval=FALSE}
+```{r 03-lendo-dados-2, eval=FALSE}
 setwd('D:/caminho/do/arquivo/arquivo.csv')
 ```
 
@@ -43,7 +43,7 @@ O R base possui funções para a leitura dos principais tipos de arquivos. Um ou
 
 Diversos tipos de arquivos são lidos pelo R: Comma-Separated Values (csv), Excel, arquivos separados por delimitadores, colunas de tamanho fixo etc. Talvez o tipo de arquivo (estruturado) mais comum hoje em dia, e mais simples de trabalhar, seja o csv. Começaremos a importar dados com arquivos csv.
 
-```{r eval=FALSE}
+```{r 03-lendo-dados-3, eval=FALSE}
 library(tidyverse) # já carrega o readr
 #ou
 library(readr)
@@ -51,11 +51,11 @@ library(readr)
 
 Vamos importar um csv chamado `senado.csv`. Caso o arquivo esteja em seu working directory (`getwd()`), basta passar apenas o nome do arquivo para a função, caso contrário será necessário informar todo o caminho até a pasta do arquivo. Usamos o read_csv() para fazer isso.
 
-```{r eval=FALSE}
+```{r 03-lendo-dados-4, eval=FALSE}
 senado <- read_csv("senado.csv")
 ```
 
-```{r eval=TRUE, echo=FALSE, message=FALSE}
+```{r 03-lendo-dados-5, eval=TRUE, echo=FALSE, message=FALSE}
 library(readr)
 senado <- read_csv("dados/senado.csv")
 ```
@@ -64,28 +64,28 @@ Esse comando carrega o conteúdo do arquivo `senado.csv` para o objeto (variáve
 
 O `head` e o `tail` são funções para ver a "cabeça" e o "rabo" dos seus dados, ou seja, o começo e o fim das amostras. É muito importante sempre observar a "aparência" dos dados após o carregamento. Essa observação ajuda a identificar erros básicos no carregamento, possibilitando ajustes o quanto antes, impedindo que esses erros se propaguem. Repare que na primeira linha temos os nomes das colunas e, em seguida, os registros.
 
-```{r}
+```{r 03-lendo-dados-6}
 head(senado)
 ```
 
-```{r}
+```{r 03-lendo-dados-7}
 tail(senado)
 ```
 
 Outros comandos muito importantes para começar a investigar os dados são o `str()`, o `class()` e o `summary()`.
 
 Para verificar o tipo do objeto, ou seja, sua classe, utilize:
-```{r}
+```{r 03-lendo-dados-8}
 class(senado)
 ```
 
 Já para verificar a estrutura do objeto, ou seja, seus campos (quando aplicável), insira:
-```{r}
+```{r 03-lendo-dados-9}
 str(senado) #STRucture
 ```
 
 Para verificar estatísticas básicas do objeto (média, mediana, quantis, mínimo, máximo etc.), quando aplicáveis:
-```{r}
+```{r 03-lendo-dados-10}
 summary(senado)
 ```
 
@@ -93,7 +93,7 @@ Acontece que nem sempre o separador será o `;`, típico do csv. Nesse caso ser�
 
 Exemplo:
 
-```{r eval=FALSE}
+```{r 03-lendo-dados-11, eval=FALSE}
 #lendo arquivo com delimitador #
 read_delim('caminho/do/arquivo/arquivo_separado_por#.txt', delim = '#')
 
@@ -104,17 +104,9 @@ read_fwf('caminho/do/arquivo/arquivo_posicional.txt', col_positions = fwf_widths
 
 No capítulo a seguir exploraremos melhor os tipos de objetos mais comuns no R.
 
-```{block, type='rmdtip'}
+```{block 03-lendo-dados-12, type='rmdtip'}
 <strong>Referências:</strong>  
 [Site do pacote `readr` com mais exemplos](https://readr.tidyverse.org)  
 [Site do pacote `readxl`, usado para ler arquivos Excel](https://readxl.tidyverse.org)     
 ```
 
-
-## Exercícios:
-
-1. Leia o arquivo `TA_PRECOS_MEDICAMENTOS.csv`, cujo separador é uma barra `|`.
-
-2. Leia o arquivo de colunas fixas `fwf-sample.txt`, cuja primeira coluna (nomes) tem tamanho vinte, a segunda (estado) tem tamanho dez e a terceira (código) tem tamanho doze.
-
-3. Investigue os parâmetros das funções de leitura do R base: `read.csv()`, `read.delim()` e `read.fwf()`. Notou as diferenças das funções do `readr`?

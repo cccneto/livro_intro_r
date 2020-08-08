@@ -4,7 +4,7 @@
 
 Nós já falamos sobre vetores, que são as principais estruturas unidimensionais de dados e que só aceitam elementos da mesma classe:
 
-```{r}
+```{r 11-dados-complexos-1}
 a <- c(1, 2, "c", 4)
 class(a)
 ```
@@ -13,7 +13,7 @@ O R também possui uma estrutura de dados que pode armazenar, literalmente, qual
 
 No exemplo abaixo uma série de objetos de classes diferentes são armazenadas:
 
-```{r}
+```{r 11-dados-complexos-2}
 data_frame <- head(iris)
 elemento_unico_inteiro <- 1
 um_na <- NA
@@ -33,7 +33,7 @@ minha_lista
 
 Pelo output já percebemos que a maneira como extraímos um elemento de um vetor é diferente da de uma lista. No primeiro, usamos um par de colchetes (`[]`), no segundo usamos dois pares (`[[]]`) ou também cifrão (`$`), que só funciona caso o elemento da lista possua um nome.
 
-```{r}
+```{r 11-dados-complexos-3}
 minha_lista[[2]]
 minha_lista$vetor_string
 # o comando abaixo retorna NULL pq "um_na" não é um nome de
@@ -43,20 +43,20 @@ minha_lista$um_na
 
 Vetores podem ser transformandos em listas usando a função de coerção `as.list()`:
 
-```{r}
+```{r 11-dados-complexos-4}
 as.list(vetor_string)
 ```
 
 Inserir um nome em uma lista é simples com o uso da função `names()`, que pode alterar os nomes da lista inteira ou de apenas um elemento, como no exemplo abaixo:  
 
-```{r}
+```{r 11-dados-complexos-5}
 names(minha_lista)[3] <- "meu_na"
 names(minha_lista)
 ```
 
 A função `str()` pode user usada para inspecionar a estrutura da lista:
 
-```{r}
+```{r 11-dados-complexos-6}
 str(minha_lista)
 ```
 
@@ -71,14 +71,14 @@ O pacote `purrr` possui uma série de comandos para aplicar funções a elemento
 
 Nós já vimos que o R aplica uma função a cada elemento de um vetor de uma forma muito simples:
 
-```{r}
+```{r 11-dados-complexos-7}
 meu_vetor <- c(1, -3, 5, -10)
 # extrair o modulo de cada elemento do vetor acima
 abs(meu_vetor)
 ```
 
 No caso de listas, não é bem assim que funciona:
-```{r, error = TRUE}
+```{r 11-dados-complexos-8, error = TRUE}
 minha_lista <- list(1, 3, 5, 10)
 abs(minha_lista)
 ```
@@ -87,7 +87,7 @@ abs(minha_lista)
 
 O pacote `purrr` faz parte do `tidyverse`.
 
-```{r}
+```{r 11-dados-complexos-9}
 library(tidyverse)
 library(purrr)
 map(minha_lista, abs)
@@ -95,14 +95,14 @@ map(minha_lista, abs)
 
 Veja a diferença no output:
 
-```{r}
+```{r 11-dados-complexos-10}
 class(minha_lista)
 map(minha_lista, class)
 ```
 
 De maneira genérica, é assim que são usados os parâmetros de `map()`:
 
-```{r, eval = FALSE}
+```{r 11-dados-complexos-11, eval = FALSE}
 map(.x, .f, ...)
 # ou 
 map(VETOR_OU_LISTA, FUNCAO_PARA_APLICAR, ARGUMENTOS_OPCIONAIS)
@@ -114,7 +114,7 @@ Existem três maneiras de especificar a função para usar no `map()`:
 
 - Uma função existente
 
-```{r}
+```{r 11-dados-complexos-12}
 # definir uma lista composta por vetores
 v <- list(v1 = c(1, 3, 5), v2 = c(2, 4, 6), v3 = c(7, 8, 9))
 # aplicar a raiz quadrada a todos os vetores
@@ -126,7 +126,7 @@ map(v, sum)
 
 - Uma função "anônima", definida dentro da própria `map()`. Veja que, em `function(x)` abaixo, `x` é como se fosse uma representação genérica de cada elemento da lista `v`. Em inglês isso se chama placeholder.
 
-```{r}
+```{r 11-dados-complexos-13}
 # elevar cada elemento de cada vetor ao quadrado
 map(v, function(x) x^2)
 # elevar a soma dos elementos do vetor ao quadrado
@@ -135,7 +135,7 @@ map(v, function(x) sum(x)^2)
 
 - Uma fórmula. Deve-se começar com o símbolo `~` para iniciar uma função e `.x` para se referir ao seu input, que corresponde a cada elemento da lista especificada no primeiro argumento de `map()`. Traduzindo os dois comandos anteriores para esta sintaxe, ficaria assim:
 
-```{r}
+```{r 11-dados-complexos-14}
 map(v, ~ .x^2)
 map(v, ~ sum(.x)^2)
 ```
@@ -145,24 +145,24 @@ map(v, ~ sum(.x)^2)
 
 A função `map()` retorna uma lista. Contudo, se você sabe que sua função deve retornar um resultado em que todos os elementos pertencem a uma mesma classe, é possível usar as funções derivadas de map, como `map_chr()` (character) e `map_dbl()` (numérico):
 
-```{r}
+```{r 11-dados-complexos-15}
 map_chr(v, class)
 ```
 
-```{r}
+```{r 11-dados-complexos-16}
 map_dbl(v, ~ sum(.x)^2)
 ```
 
 Dá até para garantir que o resultado de `map()` seja um dataframe com `map_dfr()` ou `map_dfc()`:
 
-```{r}
+```{r 11-dados-complexos-17}
 map_dfc(v, function(x) x * 2)
 ```
 
 
 É possível e simples encadear uma sequência de comandos `map()` com o pipe:
 
-```{r}
+```{r 11-dados-complexos-18}
 v %>% 
   map(~ .x * 2) %>% 
   map_dbl(sum)
@@ -177,7 +177,7 @@ Suponha que, para cada região, desejamos ler o arquivo, padronizar os nomes das
 
 Baixe o dataset e salve em uma pasta chamada "dados". Descompacte o arquivo zip e uma nova pasta será criada.
 
-```{r}
+```{r 11-dados-complexos-19}
 # listar os arquivos contidos na pasta baixada
 arquivos <- dir("dados/hourly-energy-consumption/",
                 # listar apenas arquivos que contem o padrao abaixo
@@ -187,14 +187,14 @@ arquivos <- dir("dados/hourly-energy-consumption/",
 
 Para fins de demonstração, o código abaixo mostra como seria executar o processo descrito acima para apenas um dos arquivos:
 
-```{r, message=FALSE, warning=FALSE}
+```{r 11-dados-complexos-20, message=FALSE, warning=FALSE}
 df1 <-read_csv(arquivos[1])
 head(df1)
 ```
 
 Para extrair o nome do arquivo, note que o padrão é NOMEREGIAO_hourly. Por isso, podemos usar str_split() para "quebrar" o string em dois e pegar apenas o primeiro elemento.
 
-```{r}
+```{r 11-dados-complexos-21}
 # basename() retorna apenas o nome do arquivo, sem o diretorio
 basename(arquivos[1])
 # str_split() quebra um string em mais de um baseado no separador especificado
@@ -218,7 +218,7 @@ df1_mes
 
 A solução para aplicar o código acima para todos os arquivos csv diferentes de maneira elegante no R é o sistematizar, transformando-o em uma função:
 
-```{r}
+```{r 11-dados-complexos-22}
 
 agregar_dados <- function(arquivo_csv){
   
@@ -250,7 +250,7 @@ agregar_dados <- function(arquivo_csv){
 
 Como sabemos que a função `agregar_dados()` deve retornar um dataframe, usamos `map_dfr()` para, além de gerar um dataframe por arquivo, juntá-los em um dataframe só:
 
-```{r, message=FALSE, warning=FALSE}
+```{r 11-dados-complexos-23, message=FALSE, warning=FALSE}
 df_mes_geral <- arquivos %>% 
   map_dfr(agregar_dados)
 

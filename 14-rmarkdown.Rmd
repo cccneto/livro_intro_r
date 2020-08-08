@@ -1,5 +1,5 @@
 
-```{r, include=FALSE, warning=FALSE, message=FALSE}
+```{r 14-rmarkdown-1, include=FALSE, warning=FALSE, message=FALSE}
 knitr::opts_chunk$set(fig.align='center', fig.width = 7, fig.asp = 0.618,
                       out.width = '100%')
 ```
@@ -32,7 +32,7 @@ A seção anterior já deu algumas dicas sobre a utilidade do RMarkdown. Aqui el
 
 ## Estrutura de um RMarkdown
 
-```{r echo = FALSE, comment = ""}
+```{r 14-rmarkdown-2, echo = FALSE, comment = ""}
 cat(htmltools::includeText("rmarkdown/primeiro_exemplo.Rmd"))
 ```
 
@@ -75,7 +75,7 @@ Na figura acima, é mostrado como o texto se mistura com o código de markdown. 
 
 Há duas formas de se renderizar um documento `.Rmd`. A primeira é via função `render()` do pacote `rmarkdown`.
 
-```{r, eval=FALSE}
+```{r 14-rmarkdown-3, eval=FALSE}
 render(input, output_format = NULL, output_file = NULL, output_dir = NULL,
        output_options = NULL, intermediates_dir = NULL,
        runtime = c("auto", "static", "shiny"),
@@ -213,7 +213,7 @@ I want the contents of this cell to fit into one line   Word1 Word2
 
 ------------------------------------------------------  ------------
 
-```{r}
+```{r 14-rmarkdown-4}
 x <- letters[1:3]
 y <- LETTERS[1:3]
 knitr::kable(data.frame(x, y), align = 'cc')

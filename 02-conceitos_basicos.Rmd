@@ -1,7 +1,7 @@
 
 # Conceitos Básicos
 
-```{r, echo = FALSE}
+```{r 02-conceitos-basicos-1, echo = FALSE}
 library(tidyverse)
 ```
 
@@ -14,13 +14,13 @@ O console é uma das quatro partes principais do RStudio. Lá é onde você vai 
 
 Olhando para o console, você verá o símbolo `>`. Este símbolo indica a linha onde você deve inserir os comandos. Clique nesse símbolo para posicionar o cursor na linha de comandos e digite seu primeiro comando em R: `2 * 3`. Digite e aperte _enter_. Você verá o seguinte resultado:
 
-```{r echo=FALSE}
+```{r 02-conceitos-basicos-2, echo=FALSE}
 2 * 3
 ```
 
 Além de outras funcionalidades mais interessantes, o R é como uma grande calculadora científica, como apontado anteriormente. Para entender melhor esse conceito, vamos exercitar um pouco o console de comandos. Digite um por um os seguintes comandos e acompanhe os resultados:
 
-```{r eval=FALSE}
+```{r 02-conceitos-basicos-3, eval=FALSE}
 7 * 9 + 2 * 6
 2.5 * 4
 (50 + 7)/(8 * (3 - 5/2))
@@ -65,7 +65,7 @@ Conhecer os tipos de objetos do R é fundamental. Para criar objetos, utiliza-se
 
 Execute, no console ou no editor de códigos, o seguinte comando `x <- 15`. Pronto, agora o nome `x` representa o valor `15`. Para comprovar, execute apenas o nome do objeto `x`, o R mostrará o conteúdo dele. A partir de então, você poderá utilizar esse objeto como se fosse o valor 15. Experimente os seguintes resultados:
 
-```{r eval=FALSE}
+```{r 02-conceitos-basicos-4, eval=FALSE}
 x + 5
 x * x / 2
 2 ^ x
@@ -86,7 +86,7 @@ Claro que as funções do R base não serão suficientes para resolver todos os 
 
 Funcões do R base.
 
-```{r eval=FALSE}
+```{r 02-conceitos-basicos-5, eval=FALSE}
 raiz.quadrada <- sqrt(16) # função para calcular raiz quadrada
 
 round(5.3499999, 2) # função para arredondamento
@@ -96,7 +96,7 @@ Uma função tem dois elementos básicos: o nome e o(s) parâmetro(s) (também c
 
 Quando você usa uma função, você pode informar os parâmetros de duas formas: sequencialmente, sem explicitar o nome dos parâmetros, ou na ordem que quiser, explicitando o nome dos parâmetros. Veja o exemplo a seguir:
 
-```{r eval=FALSE}
+```{r 02-conceitos-basicos-6, eval=FALSE}
 round(5.3499999, 2)
 # o mesmo que:
 round(digits = 2, x = 5.3499999)
@@ -104,7 +104,7 @@ round(digits = 2, x = 5.3499999)
 
 Para saber como informar os parâmetros corretamente, utilize o comando `?` (ou coloque o cursor no nome da função e pressione F1) para ver a documentação de funções, ou seja, conhecer para que serve, entender cada um dos seus parâmetros e ver exemplos de uso.
 
-```{r eval=FALSE}
+```{r 02-conceitos-basicos-7, eval=FALSE}
 ?round
 ?rnorm
 ??inner_join # procurar ajuda de funções que não estão "instaladas" ainda
@@ -112,7 +112,7 @@ Para saber como informar os parâmetros corretamente, utilize o comando `?` (ou 
 
 Vale comentar que é possível informar objetos nos parâmetros das funções. 
 
-```{r eval=TRUE}
+```{r 02-conceitos-basicos-8, eval=TRUE}
 x <- 3.141593
 round(x, 3)
 ceiling(x)
@@ -141,13 +141,13 @@ Caso você precise de algum pacote específico, procure no Google pelo tema que 
 
 Para instalar um pacote, execute o seguinte comando:
 
-```{r eval = FALSE}
+```{r 02-conceitos-basicos-9, eval = FALSE}
 install.packages("dplyr") # instala um famoso pacote de manipulação de dados
 ```
 
 Uma vez instalado, esse pacote estará disponível para uso sempre que quiser, sem a necessidade de instalá-lo novamente. Mas, sempre que iniciar um código novo, você precisará carregá-lo na memória. Para isso, use o seguinte comando:
 
-```{r eval = FALSE}
+```{r 02-conceitos-basicos-10, eval = FALSE}
 library(dplyr)
 ```
 
@@ -176,7 +176,7 @@ O Tidyverse foi idealizado, dentre outros responsáveis, por Hadley Wickham, um 
 
 Para instalar os pacotes do Tidyverse, rode o comando abaixo:
 
-```{r, eval = FALSE}
+```{r 02-conceitos-basicos-11, eval = FALSE}
 install.packages("tidyverse")
 ```
 
@@ -193,7 +193,7 @@ install.packages("tidyverse")
 
 5. Rode o comando abaixo para instalar os pacotes usados neste livro:  
 
-```{r, eval = FALSE}
+```{r 02-conceitos-basicos-12, eval = FALSE}
 install.packages(c("broom", "choroplethrMaps", "DT", "dygraphs",
                    "gapminder",  "ggrepel",
                    "ggthemes", "gridExtra", "hrbrthemes", "htmltools", "ISLR",

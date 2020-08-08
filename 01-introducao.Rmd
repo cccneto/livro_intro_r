@@ -9,7 +9,7 @@ Trata-se de um termo cada vez mais utilizado para designar uma área de conhecim
 
 Não existe apenas uma forma de estruturar e aplicar os conhecimentos da Ciência de Dados. A forma de aplicação varia bastante conforme a necessidade do projeto ou do objetivo que se busca alcançar. Neste curso, usaremos um modelo de workflow bastante utilizado, apresentado no livro R for Data Science [@R-for-Data-Science].
 
-```{r echo=FALSE, fig.cap='Workflow básico para ciência de dados'}
+```{r 01-introducao-1, echo=FALSE, fig.cap='Workflow básico para ciência de dados'}
 knitr::include_graphics("imagens/workflow.png")
 ```
 

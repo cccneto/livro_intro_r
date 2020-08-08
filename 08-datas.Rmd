@@ -5,7 +5,7 @@ Datas são um caso a parte no R. Existe uma própria classe para objetos desse t
 
 Abaixo, definimos um vetor com datas
 
-```{r}
+```{r 08-datas-1}
 x <- c("2014-07-15", "2018/03/20", "2019-12-31", "20170511")
 as.Date(x)
 class(as.Date(x))
@@ -13,7 +13,7 @@ class(as.Date(x))
 
 Perceba que o R nativamente não aceita qualquer separador entre o ano, o mês e o dia, apenas o traço. O pacote `lubridate`, que faz parte da família `tidyverse`, possui uma versão mais generalizável para isso:
 
-```{r}
+```{r 08-datas-2}
 library(lubridate)
 lubridate::as_date(x)
 ```
@@ -24,11 +24,11 @@ A propósito, dominar o pacote `lubridate`, que possui funções muito simples d
 
 Essa tarefa é feita usando uma função nativa do R chamada `seq.Date()`, que possui quatro argumentos principais, sendo que três deles precisam ser especificados.
 
-```{r}
+```{r 08-datas-3}
 args(seq.Date)
 ```
 
-```{r}
+```{r 08-datas-4}
 # gerar vetor de datas separadas por mes
 seq.Date(from = as_date("2020-01-01"),
          to = as_date("2020-12-01"),
@@ -59,7 +59,7 @@ Para fazer o R converter (ou parsear na linguagem de programação) um string em
 
 Por exemplo, no vetor de exemplo `x`, definido acima, as datas já estavam definidas no formato correto: AAAA-MM-DD. Aqui no Brasil usamos outro formato: DD/MM/AAAA. O `lubridate` possui uma função pronta para essa situação:
 
-```{r}
+```{r 08-datas-5}
 # observer como usamos diferentes separadores
 datas_brasil <- c("01/12/2019", "20/11/2018", "30011990", "17-03-2000")
 # parseando o vetor acima para Data
@@ -69,7 +69,7 @@ dmy(datas_brasil)
 
 Caso o vetor também contenha dados de horário, basta incluir o sufixo referente a hora, minuto e segundo:
 
-```{r}
+```{r 08-datas-6}
 dmy_hms("30-09-2019 14:51:39")
 # sem o segundo
 dmy_hm("30-09-2019 14:15")
@@ -81,7 +81,7 @@ dmy_h("30-09-2019 15")
 
 É possível extrair qualquer tipo de componente de uma data ou de um vetor de datas com o lubridate. Veja alguns exemplos:
 
-```{r}
+```{r 08-datas-7}
 datas_brasil <- dmy_hms(c("01/12/2019 13:51:15", "20/11/2018 00:00:00", "30011990 080000", "17-03-2000 203000"))
 datas_brasil
 # extrair componentes da data:
@@ -107,7 +107,7 @@ Geralmente se está interessado em fazer três tipos de operações matemáticas
 
 * **Adicionar uma quantidade N de dias/meses/anos/etc em uma data**:
 
-```{r}
+```{r 08-datas-8}
 # adicionar 1 semana nas datas
 datas_brasil + ddays(7)
 # adicionar 3 meses
@@ -120,7 +120,7 @@ datas_brasil + dyears(1)
 
 No R, subtrair datas segue a mesma sintaxe de subtrair números:
 
-```{r}
+```{r 08-datas-9}
 data1 <- dmy_hms("01/09/1993 20:00:00")
 data2 <- dmy_hms("24-06-2018 17:00:00")
 
@@ -129,19 +129,19 @@ dif
 ```
 Por padrão, o R retorna a diferença em dias, mas em um objeto de classe `difftime`.
 
-```{r}
+```{r 08-datas-10}
 class(dif)
 ```
 
 Recomenda-se então converter o output para a classe `numeric`:
 
-```{r}
+```{r 08-datas-11}
 as.numeric(dif)
 ```
 
 Caso se deseje calcular essa diferença em outras unidades de tempo, como meses ou semanas, basta fazer a divisão correspondente:
 
-```{r}
+```{r 08-datas-12}
 # conveter para semanas
 as.numeric(dif) / 7
 # converter para meses
@@ -157,7 +157,7 @@ Para arredondar uma data, por exemplo, retornar o primeiro ou último dia da sem
 
 
 
-```{r ultimo_chunk_datas}
+```{r 08-datas-13 }
 # retornar a primeira data da semana:
 floor_date(datas_brasil, "week")
 # retornar a ultima data do mês

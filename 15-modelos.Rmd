@@ -1,8 +1,8 @@
-```{r, include=FALSE}
+```{r 15-modelos-1, include=FALSE}
 knitr::opts_chunk$set(fig.width=8.5)
 ```
 
-```{r}
+```{r 15-modelos-2}
 library(rpart)
 library(randomForest)
 library(ModelMetrics)
@@ -32,7 +32,7 @@ onde $y$ é a variável dependente, $x_{k}$ é a k-ésima variável explicativa,
 
 A função `lm()` estima esse modelo pelo método denominado de mínimos quadrados ordinários (MQO). Antes de exemplificarmos o uso da função, vamos falar sobre a representação simbólica do modelo, ou seja, como especificar o modelo no R. Em geral, o modelo terá argumentos `x` e `y`, em que o usuário passa os dados nesses argumentos ou terá a estrutura de fórmula. Por ser o método menos usado no modelo linear, detalharemos a estrutura de fórmula. Na função `lm()`, é obrigatório passar-se um objeto da classe fórmula, ou algum objeto que possa ser convertido para uma fórmula. Por exemplo: para o modelo linear com duas variáveis ($y$ e $x$) e uma constante, a fórmula correspondente é:
 
-```{r}
+```{r 15-modelos-3}
 f <- 'y ~ x'
 class(f)
 class(as.formula(f))
@@ -40,56 +40,56 @@ class(as.formula(f))
 
 Para mostrarmos as possibilidades de uso da fórmula de especificação do modelo, utilizaremos a base `mtcars`. Esta base traz o consumo de gasolina (`mpg`) e algumas outras características do veículo. Detalharemos cada variável explicativa conforme elas são usadas. No entanto, você pode olhar o help dessa base: `?mtcars`. Para iniciarmos, utilizaremos a variável `mpg` (miles per galon) e a variável `hp` (Gross horsepower).
 
-```{r}
+```{r 15-modelos-4}
 data(mtcars)
 lm(mpg ~ hp, data = mtcars)
 ```
 
 Note que não houve especificação de uma constante. Automaticamente, o R inclui a constante. Você pode inclui-la explicitamente ou retirá-la:
 
-```{r, eval=FALSE}
+```{r 15-modelos-5, eval=FALSE}
 lm(mpg ~ hp + 1, data = mtcars)
 lm(mpg ~ hp + 0, data = mtcars)
 ```
 
 Já temos uma pista de como incluir mais variáveis: basta "adicioná-las" com o símbolo `+`. Isto é, vamos incluir a variável `am` - Transmission (0 = automatic, 1 = manual) - no modelo:
 
-```{r, eval=FALSE}
+```{r 15-modelos-6, eval=FALSE}
 lm(mpg ~ hp + am, data = mtcars)
 ```
 
 Se quiséssemos incluir todas as variáveis explicativas:
 
-```{r, eval=FALSE}
+```{r 15-modelos-7, eval=FALSE}
 lm(mpg ~ ., data = mtcars)
 ```
 
 Interações:
 
-```{r, eval=FALSE}
+```{r 15-modelos-8, eval=FALSE}
 lm(mpg ~ hp + am + hp:am, data = mtcars)
 ```
 
 Transformações:
-```{r}
+```{r 15-modelos-9}
 lm(log(mpg) ~ log(hp) + am, data = mtcars)
 ```
 
 No entanto, algumas transformações podem se confundir com símbolos quem são usados na fórmula. No exemplo abaixo, abstraia os dados e foque no efeito resultante da fórmula:
 
-```{r}
+```{r 15-modelos-10}
 lm(mpg ~ (am + hp)^2 + hp^2, data = mtcars)
 ```
 
 `(am + hp)^2`, em termos simbólicos, retorna `am + hp + am*hp` e `hp^2` retorna `hp`. No caso em que um símbolo não pode ser usado diretamente, este deve ser usado dentro da função `I()`:
 
-```{r}
+```{r 15-modelos-11}
 lm(mpg ~ hp + I(hp^2), data = mtcars)
 ```
 
 Variáveis categóricas são convertidas automaticamente para dummies. Por exemplo, vamos adicionar uma variável fictícia chamada `cat`, que receberá valores `a`, `b` e `c` ao data.frame `mtcars`:
 
-```{r, message=FALSE}
+```{r 15-modelos-12, message=FALSE}
 library(tidyverse)
 mtcars <- mutate(mtcars,
                  cat = sample(c("a", "b", "c"),
@@ -99,7 +99,7 @@ lm(mpg ~ hp + cat, data = mtcars)
 
 Falta agora discutir os principais argumentos da função `lm()`:
 
-```{r, eval=FALSE}
+```{r 15-modelos-13, eval=FALSE}
 lm(formula, data, subset, weights, na.action,
    method = "qr", model = TRUE, x = FALSE, y = FALSE, qr = TRUE,
    singular.ok = TRUE, contrasts = NULL, offset, ...)
@@ -107,13 +107,13 @@ lm(formula, data, subset, weights, na.action,
 
 O argumento `formula` já foi discutido anteriormente. É neste argumento que o modelo é especificado. O argumento `data` recebe (opcionalmente) um data.frame com os dados. O parâmetro data é opcional, porque você pode passar diretamente os vetores de dados. Por exemplo:
 
-```{r}
+```{r 15-modelos-14}
 lm(log(mtcars$mpg) ~ log(mtcars$hp))
 ```
 
 Continuando, há possibilidade de estimar-se o modelo para um subconjunto dos dados, sendo necessário informar um vetor que selecione as observações que entrarão na estimação, no argumento `subset`. No exemplo que estamos utilizando, suponha que você queira estimar o modelo apenas para os carros automáticos:
 
-```{r}
+```{r 15-modelos-15}
 lm(mpg ~ hp, data = mtcars, subset = (am == 0))
 lm(mpg ~ hp, data = mtcars, subset = (am == 1))
 ```
@@ -122,7 +122,7 @@ Há também a possibilidade de utilizar-se um vetor de pesos no argumento `weigh
 
 Para ver-se um sumário dos resultados da estimação, utiliza-se a função `summary()`:
 
-```{r}
+```{r 15-modelos-16}
 summary(lm(mpg ~ hp, data = mtcars))
 ```
 
@@ -130,21 +130,21 @@ summary(lm(mpg ~ hp, data = mtcars))
 
 Além do resumo, é possível acessar uma série de objetos gerados pela função `lm()`, como coeficientes, resíduos, valores preditos (dentro do conjunto de estimação) etc. Primeiro, vamos listar esses elementos:
 
-```{r}
+```{r 15-modelos-17}
 fit <- lm(mpg ~ hp, data = mtcars)
 is.list(fit)
 ls(fit)
 ```
 Como se trata de uma lista, podemos acessar os objetos usando o `$`.
 
-```{r}
+```{r 15-modelos-18}
 fit$coefficients
 fit$residuals[1:10]
 ```
 
 Também existem funções para se acessar esses resultados:
 
-```{r}
+```{r 15-modelos-19}
 coefficients(fit)
 residuals(fit)[1:5]
 ```
@@ -155,7 +155,7 @@ No R, para realizar-se predições, utiliza-se a função `predict()`, que é um
 
 Abaixo está um exemplo do seu uso:
 
-```{r, message=FALSE}
+```{r 15-modelos-20, message=FALSE}
 set.seed(13034) # para replicação
 # 70% dos dados
 idx <- sample(nrow(mtcars), size = 0.7*nrow(mtcars), replace = FALSE)
@@ -196,7 +196,7 @@ Um detalhe importante sobre a regressão logística é que este modelo se enquad
 
 O exemplo a seguir vem do livro [An Introduction to Statistical Learning with Application in R](http://www-bcf.usc.edu/~gareth/ISL/). Utilizaremos o pacote `ISLR` e o conjunto de dados `Smarket` (`?Smarket`). Essa base traz informações sobre as variações do índice S&P 500 entre 2001 e 2005. Este índice é composto por 500 ativos negociados na NYSE ou Nasdaq.
 
-```{r}
+```{r 15-modelos-21}
 library(ISLR)
 data("Smarket")
 head(Smarket)
@@ -204,7 +204,7 @@ head(Smarket)
 
 A base consiste em nove variáveis. A variável de interesse é `Direction` e outras cinco variáveis serão usadas como variáveis explicativas ou preditores. Inicialmente, separaremos nossos dados em treino e teste. Como trata-se de um problema de série temporal, utilizaremos a variável `Year` para separar os dados.
 
-```{r}
+```{r 15-modelos-22}
 train <- Smarket %>% 
   filter(Year <= 2004) %>% 
   select(-Year)
@@ -215,14 +215,14 @@ test <- Smarket %>%
 
 Agora vamos estimar o modelo:
 
-```{r}
+```{r 15-modelos-23}
 fit <- glm(Direction ~ . -Today, data = train, family = binomial())
 summary(fit)
 ```
 
 As predições são realizadas com a função `predict()`, mas com o detalhe de que temos que escolher o tipo de predição. O default, `link`, passará o logit. Isto é, o valor da predição linear. Já `response` estimará a probabilidade da observação do evento de interesse. Por fim, `terms` retorna uma matriz com a predição linear para cada variável explicativa. O nosso interesse é na probabilidade do mercado ter subido, logo, usaremos o tipo `response` e transformaremos a probabilidade em `Up` e `Down`.
 
-```{r}
+```{r 15-modelos-24}
 pred <- predict(fit, test, type = 'response')
 pred <- ifelse(pred > 0.5, "Up", "Down")
 pred <- factor(pred, levels = c("Down", "Up"))
@@ -230,14 +230,14 @@ pred <- factor(pred, levels = c("Down", "Up"))
 
 Abaixo avaliamos o erro de classificação, que é de, aproximadamente, 52%. Ou seja, pior do que um chute aleatório.
 
-```{r}
+```{r 15-modelos-25}
 # Taxa de erro
 ce(test$Direction, pred)
 ```
 
 Os autores, então, sugerem estimar-se o modelo com apenas duas variáveis.
 
-```{r}
+```{r 15-modelos-26}
 fit <- glm(Direction ~ Lag1 + Lag2, data = train, family = binomial())
 pred <- predict(fit, test, type = 'response')
 pred <- ifelse(pred > 0.5, "Up", "Down")
@@ -253,7 +253,7 @@ Nesse caso, o modelo acertaria 56% das vezes.
 Uma das limitações da regressão logística é que esse método não vai funcionar bem quando não for possível separar as classes linearmente, como no exemplo abaixo:
 
 
-```{r}
+```{r 15-modelos-27}
 #### atencao: nao precisam se preocupar em reproduzir o codigo abaixo
 
 # criar matriz de dados aleatorios
@@ -276,7 +276,7 @@ ggplot(mat, aes(x = V1, y = V2, color = ta_dentro)) +
 
 Algoritmos baseados em Decision Trees tentam achar maneiras de criar subsets ou subgrupos do universo dos dados, onde cada subgrupo pertence a um *node*. O objetivo do modelo é criar *nodes* onde haja uma distinção clara entre as classes previstas de forma que possa a cada *node* a probabilidade de um indivíduo pertencer a uma classe. O gráfico abaixo é um exemplo simples e didática de uma árvore de decisão:
 
-```{r, echo = FALSE, fig.cap='Fonte: [Machine Learning Mastery](https://machinelearningmastery.com/classification-and-regression-trees-for-machine-learning/)'}
+```{r 15-modelos-28, echo = FALSE, fig.cap='Fonte: [Machine Learning Mastery](https://machinelearningmastery.com/classification-and-regression-trees-for-machine-learning/)'}
 knitr::include_graphics("images/arvore.png")
 ```
 
@@ -296,7 +296,7 @@ Como dataset de demonstração para a árvore de decisão, usaremos um bem inter
 
 O código abaixo mostra como importar e consolidar todos os datasets em um só dataframe:
 
-```{r, include = FALSE, eval = FALSE}
+```{r 15-modelos-29, include = FALSE, eval = FALSE}
 
 # importar arquivos referentes ao ponto de entrada
 ponto_entrada <- readr::read_csv("dados/hr-analytics-case-study/in_time.csv")
@@ -353,19 +353,19 @@ rh <- left_join(geral, emp_pesquisa, by = "EmployeeID") %>%
 write_rds(rh, "dados/exemplo_classificacao_rh.rds")
 ```
 
-```{r, eval = TRUE, include = FALSE}
+```{r 15-modelos-30, eval = TRUE, include = FALSE}
 rh <- readr::read_rds("dados/exemplo_classificacao_rh.rds")
 ```
 
 Vejamos como ficou nosso conjunto de dados:
 
-```{r}
+```{r 15-modelos-31}
 glimpse(rh)
 ```
 
 
 
-```{block, type='warning'}
+```{block 15-modelos-32, type='warning'}
 <strong>Exercícios: </strong>  
 - Conheça melhor nossa variável Resposta. Qual o % da base que saiu da empresa (`Attrition` = Yes). Baseado nessa informação, qual o pior modelo aceitável?  
 - Quais são as 2 variáveis numéricas que mais influenciam a variável resposta `EmployeeID`? Façam gráficos para investigar essa relação.  
@@ -374,7 +374,7 @@ glimpse(rh)
 ```
 
 
-```{r, eval = FALSE, include = FALSE}
+```{r 15-modelos-33, eval = FALSE, include = FALSE}
 ### contar casos
 rh %>% 
   count(Attrition) %>% 
@@ -407,12 +407,12 @@ rh %>%
 
 Conforme já comentamos, uma etapa essencial de um projeto de modelagem é criar uma separação de conjuntos de treino e teste.
 
-```{r, include = FALSE}
+```{r 15-modelos-34, include = FALSE}
 set.seed(123)
 ```
 
 
-```{r}
+```{r 15-modelos-35}
 ### separacao de conjuntos de treino e teste
 
 # salvar em um objeto o tamanho vertical do dataframe
@@ -431,7 +431,7 @@ rh_teste <- rh[-ind_treino, ]
 A sintaxe para criar um modelo de Decision Tree no R é bem simples, sendo a mesma da Regressão. A única diferença é que a função usada é `rpart`:
 
 
-```{r}
+```{r 15-modelos-36}
 # construcao do modelo
 mod_arvore <- rpart(Attrition ~ . - EmployeeID, data = rh_treino)
 
@@ -442,7 +442,7 @@ rpart.plot::prp(mod_arvore, type = 4, extra = 6, fallen.leaves = FALSE, varlen =
 
 A árvore ficou meio grande, não? Uma boa alternativa nesse caso é salvar o gráfico da árvore em um pdf no computador:
 
-```{r, eval = FALSE}
+```{r 15-modelos-37, eval = FALSE}
 # inicializar pdf em branco
 pdf("minha_primeira_arvore.pdf")
 # preencher pdf com o grafico da arvore
@@ -458,7 +458,7 @@ dev.off()
 
 Vamos avaliar a acurácia do modelo:
 
-```{r}
+```{r 15-modelos-38}
 # criar vetor com previsoes
 ycast <- predict(mod_arvore, newdata = rh_teste, type = "class")
 yreal <- rh_teste$Attrition
@@ -484,7 +484,7 @@ O algoritmo de árvore de decisão, apesar de simples, serviu como base para mod
 
 Criar um modelo de Random Forest no R também é muito fácil.
 
-```{r}
+```{r 15-modelos-39}
 # construir modelo
 mod_rf <- randomForest::randomForest(Attrition ~ . - EmployeeID,
                                      data = rh_treino,
@@ -497,7 +497,7 @@ caret::confusionMatrix(data = yhat_rf, reference = yreal)
 
 Um recurso muito interessante do modelo Random Forest é o cálculo da importância de cada variável, que é medido com base no impacto de realizar permutações de cada variável explanatória usada no modelo sobre alguma métrica de acurácia. O gráfico abaixo mostra que a maior perda de perfomance preditiva ocorre quando a variável de tempo no trabalho é permutada aleatoriamente:
 
-```{r, fig.height=6}
+```{r 15-modelos-40, fig.height=6}
 varImpPlot(mod_rf,
            # especificar que a medida de importancia é a perda media de acuracia
            type = 1,
@@ -506,7 +506,7 @@ varImpPlot(mod_rf,
 
 O modelo Random Forest também pode ser usado de maneira probabilística, ou seja, mudando o output para a probabilidade de ele ser sim:
 
-```{r}
+```{r 15-modelos-41}
 yhat_rf_prob <- predict(mod_rf, newdata = rh_teste, type = "prob")
 
 head(yhat_rf_prob)
@@ -530,7 +530,7 @@ head(yhat_rf_prob)
 
 5. Inclua outras variáveis e cheque o que acontece com o `rmse`.
 
-```{r}
+```{r 15-modelos-42}
 library(ISLR)
 library(ModelMetrics)
 

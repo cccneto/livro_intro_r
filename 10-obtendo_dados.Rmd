@@ -11,18 +11,18 @@ API é uma forma de comunicação de dados mais apropriada para as trocas de inf
 
 Para obter-se e utilizar-se dados de API em R recomendamos a utilização do pacote `jsonlite`.
 
-```{r message=FALSE, warning=FALSE}
+```{r 10-obtendo-dados-1, message=FALSE, warning=FALSE}
 library(jsonlite)
 ```
 
-```{r message=FALSE, echo=FALSE}
+```{r 10-obtendo-dados-2, message=FALSE, echo=FALSE}
 library(tidyverse)
 ```
 A seguir apresentaremos alguns exemplos de APIs e seu uso. Existem diversas APIs e formas de consumi-las, portanto não iremos exaurir nesse texto todas as possibilidades de uso de APIs. O principal aqui é entender-se APIs como uma fonte rica de dados que pode ser explorada em suas análises.
 
 No exemplo a seguir utilizamos a API do github (portal para repositórios) e veremos quais os repositórios do Hadley Wickham:
 
-```{r}
+```{r 10-obtendo-dados-3}
 hadley.rep <- jsonlite::fromJSON("https://api.github.com/users/hadley/repos")
 
 dim(hadley.rep)
@@ -32,7 +32,7 @@ head(hadley.rep[,c('name', 'description')], 15)
 
 Outro exemplo de API muito interessante é o portal de dados abertos da Câmara dos Deputados. Eles possuem diversas APIs para consultar os dados do processo legislativo. Veja o exemplo a seguir, que resgata as proposições utilizando API:
 
-```{r}
+```{r 10-obtendo-dados-4}
 proposicoes <- jsonlite::fromJSON("https://dadosabertos.camara.leg.br/api/v2/proposicoes")
 
 head(proposicoes$dados %>% select(siglaTipo, numero, ano, ementa))
@@ -61,7 +61,7 @@ Algo que torna o Web Scraping muito complexo é que essa tarefa é muito depende
 
 Devido a isso, este material opta por não entrar a fundo no assunto além de mostrar um exemplo superficial abaixo de scraping de uma [tabela da Wikipedia](https://pt.wikipedia.org/wiki/Campeonato_Brasileiro_de_Futebol_de_2018_-_S%C3%A9rie_A#Classifica%C3%A7%C3%A3o):
 
-```{r echo=TRUE, eval=FALSE, message=FALSE, eval=FALSE}
+```{r 10-obtendo-dados-5, echo=TRUE, eval=FALSE, message=FALSE, eval=FALSE}
 library(rvest)
 
 url <- "https://pt.wikipedia.org/wiki/Campeonato_Brasileiro_de_Futebol_de_2018_-_Série_A" %>%

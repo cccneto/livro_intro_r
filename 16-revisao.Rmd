@@ -1,6 +1,6 @@
 # Revisão - Titanic
 
-```{r, include=FALSE, warning=FALSE, message=FALSE}
+```{r 16-revisao-1, include=FALSE, warning=FALSE, message=FALSE}
 knitr::opts_chunk$set(fig.align='center', fig.width = 7, fig.asp = 0.618,
                       out.width = '100%')
 ```
@@ -11,7 +11,7 @@ O objetivo deste capítulo é fazer uma breve revisão do que foi ensinado no cu
 
 ## Carregando os Dados
 
-```{r, message=FALSE}
+```{r 16-revisao-2, message=FALSE}
 library(tidyverse)
 library(titanic)
 data("titanic_train")
@@ -19,7 +19,7 @@ data("titanic_train")
 head(titanic_train)
 ```
 
-```{r, echo=FALSE}
+```{r 16-revisao-3, echo=FALSE}
 var_desc <- data.frame(var = c("PassengerId", "Survived", "Pclass", "Name", "Sex", "Age", 
                                "SibSp", "Parch", "Ticket", "Fare", "Cabin", "Embarked"),
                        desc = c("Identificador do Passageiro",
@@ -45,7 +45,7 @@ knitr::kable(var_desc,
 
 Nesta seção, faremos alguma alteração nos dados. Veja o summary do dataset.
 
-```{r}
+```{r 16-revisao-4}
 summary(titanic_train)
 ```
 
@@ -53,7 +53,7 @@ summary(titanic_train)
 
 A variável `Survived` está definida como indicadora (1 ou 0). Como será usada em um modelo de classificação, é interessante que esta variável seja transformada ou que seja criada uma nova variável, tornando-a uma variável do tipo `factor` ou `character`.
 
-```{r}
+```{r 16-revisao-5}
 titanic_train <- titanic_train %>% 
   mutate(Survived = factor(Survived))
 levels(titanic_train$Survived) <- c("Não", "Sim")
@@ -63,14 +63,14 @@ levels(titanic_train$Survived) <- c("Não", "Sim")
 
 Na variável `Name`, percebe-se que os passageiros possuíam títulos: Mr., Miss., Mrs. etc. Seria interessante criar-se uma nova variável que possua apenas o título do passageiro. Para isto, precisaremos usar a função `str_extract()` do pacote `stringr` e um pouco de regex.
 
-```{r}
+```{r 16-revisao-6}
 titanic_train <- titanic_train %>% 
   mutate(title = str_extract(tolower(Name), '[a-z]{1,}\\.'))
 ```
 
 Quais são os títulos mais comuns?
 
-```{r}
+```{r 16-revisao-7}
 titanic_train %>% 
   group_by(title) %>% 
   summarise(n = n()) %>% 
@@ -79,7 +79,7 @@ titanic_train %>%
 
 Faremos mais uma modificação. Pode ser interessante agregarmos os títulos menos frequentes em uma única categoria.
 
-```{r}
+```{r 16-revisao-8}
 classes_de_interesse <- c("mr.", "miss", "mrs.", "master.")
 titanic_train <- titanic_train %>% 
   mutate(title = ifelse(title %in% classes_de_interesse,
@@ -94,7 +94,7 @@ Como vimos no summary, há alguns valores faltantes para a variável `Age`. Algu
 
 Para imputação, existem inúmeros métodos, podendo até mesmo ser utilizado o modelo auxiliar. Aqui, vamos inserir a mediana da idade, separando por título e sexo.
 
-```{r}
+```{r 16-revisao-9}
 titanic_train <- titanic_train %>% 
   group_by(Sex, title) %>% 
   mutate(Age = ifelse(is.na(Age), median(Age, na.rm = TRUE), Age))
@@ -110,7 +110,7 @@ summary(titanic_train$Age)
 
 Abaixo, criamos algumas visualizações iniciais. Explore as demais variáveis da base e mostre relações com a variável `Survived`.
 
-```{r}
+```{r 16-revisao-10}
 library(hrbrthemes)
 theme_set(theme_ipsum(base_size = 10))
 
@@ -153,7 +153,7 @@ titanic_train %>%
 5. Treine o modelo na base `titanic_train` completa.
 6. Realize predições para base `titanic_test`.
 
-```{r, include=FALSE, eval=FALSE}
+```{r 16-revisao-11, include=FALSE, eval=FALSE}
 titanic_train <- titanic_train %>% 
   mutate(Fare = ifelse(is.na(Fare), median(Fare, na.rm = T), Fare))
 train_final <- titanic_train %>% filter(!is.na(Survived))
