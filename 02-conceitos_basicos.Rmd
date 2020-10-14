@@ -199,7 +199,7 @@ install.packages(c("broom", "choroplethrMaps", "DT", "dygraphs",
                    "ggthemes", "gridExtra", "hrbrthemes", "htmltools", "ISLR",
                    "jsonlite", "knitr", "leaflet", "ModelMetrics",
                    "nycflights13", "plotly", "RColorBrewer",  "readxl",
-                   "scales",
-                   "titanic", "viridis", "WDI", "xtable", "xts", "sf")
+                   "scales", "randomForest", 'rpart.plot', "car", "caret",
+                   "titanic", "viridis", "WDI", "xtable", "xts", "sf"))
 ```
 
