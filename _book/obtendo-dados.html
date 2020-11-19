@@ -399,14 +399,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2><span class="header-section-number">10.1</span> API</h2>
 <p>API é uma forma de comunicação de dados mais apropriada para as trocas de informações entre softwares. Normalmente APIs trocam dados em formato hierárquico. Os dois formatos hierárquicos mais comuns são Javascript Object Notation (JSON) e eXtensible Markup Language (XML).</p>
 <p>Para obter-se e utilizar-se dados de API em R recomendamos a utilização do pacote <code>jsonlite</code>.</p>
-<div class="sourceCode" id="cb417"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb417-1" data-line-number="1"><span class="kw">library</span>(jsonlite)</a></code></pre></div>
+<div class="sourceCode" id="cb423"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb423-1" data-line-number="1"><span class="kw">library</span>(jsonlite)</a></code></pre></div>
 <p>A seguir apresentaremos alguns exemplos de APIs e seu uso. Existem diversas APIs e formas de consumi-las, portanto não iremos exaurir nesse texto todas as possibilidades de uso de APIs. O principal aqui é entender-se APIs como uma fonte rica de dados que pode ser explorada em suas análises.</p>
 <p>No exemplo a seguir utilizamos a API do github (portal para repositórios) e veremos quais os repositórios do Hadley Wickham:</p>
-<div class="sourceCode" id="cb418"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb418-1" data-line-number="1">hadley.rep &lt;-<span class="st"> </span>jsonlite<span class="op">::</span><span class="kw">fromJSON</span>(<span class="st">&quot;https://api.github.com/users/hadley/repos&quot;</span>)</a>
-<a class="sourceLine" id="cb418-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb418-3" data-line-number="3"><span class="kw">dim</span>(hadley.rep)</a></code></pre></div>
+<div class="sourceCode" id="cb424"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb424-1" data-line-number="1">hadley.rep &lt;-<span class="st"> </span>jsonlite<span class="op">::</span><span class="kw">fromJSON</span>(<span class="st">&quot;https://api.github.com/users/hadley/repos&quot;</span>)</a>
+<a class="sourceLine" id="cb424-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb424-3" data-line-number="3"><span class="kw">dim</span>(hadley.rep)</a></code></pre></div>
 <pre><code>## [1] 30 73</code></pre>
-<div class="sourceCode" id="cb420"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb420-1" data-line-number="1"><span class="kw">head</span>(hadley.rep[,<span class="kw">c</span>(<span class="st">&#39;name&#39;</span>, <span class="st">&#39;description&#39;</span>)], <span class="dv">15</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb426"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb426-1" data-line-number="1"><span class="kw">head</span>(hadley.rep[,<span class="kw">c</span>(<span class="st">&#39;name&#39;</span>, <span class="st">&#39;description&#39;</span>)], <span class="dv">15</span>)</a></code></pre></div>
 <pre><code>##                     name
 ## 1  15-state-of-the-union
 ## 2      15-student-papers
@@ -440,23 +440,23 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 14                                                                                                                                                                                                                                                                                                                                                                                                                Book chapter for beautiful data
 ## 15                                                                                                                                                                                                                                                                                                                                                                                                                        Bechmarking tools for R</code></pre>
 <p>Outro exemplo de API muito interessante é o portal de dados abertos da Câmara dos Deputados. Eles possuem diversas APIs para consultar os dados do processo legislativo. Veja o exemplo a seguir, que resgata as proposições utilizando API:</p>
-<div class="sourceCode" id="cb422"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb422-1" data-line-number="1">proposicoes &lt;-<span class="st"> </span>jsonlite<span class="op">::</span><span class="kw">fromJSON</span>(<span class="st">&quot;https://dadosabertos.camara.leg.br/api/v2/proposicoes&quot;</span>)</a>
-<a class="sourceLine" id="cb422-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb422-3" data-line-number="3"><span class="kw">head</span>(proposicoes<span class="op">$</span>dados <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(siglaTipo, numero, ano, ementa))</a></code></pre></div>
+<div class="sourceCode" id="cb428"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb428-1" data-line-number="1">proposicoes &lt;-<span class="st"> </span>jsonlite<span class="op">::</span><span class="kw">fromJSON</span>(<span class="st">&quot;https://dadosabertos.camara.leg.br/api/v2/proposicoes&quot;</span>)</a>
+<a class="sourceLine" id="cb428-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb428-3" data-line-number="3"><span class="kw">head</span>(proposicoes<span class="op">$</span>dados <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(siglaTipo, numero, ano, ementa))</a></code></pre></div>
 <pre><code>##   siglaTipo numero  ano
-## 1        PL   3009 2000
-## 2        PL   4363 2001
-## 3        PL   6699 2002
-## 4        PL    839 2003
-## 5        PL   6229 2005
-## 6        PL    411 2007
-##                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      ementa
-## 1                                                                                                                                                                                                                                                                                                                                                                                                                                                                     Revoga o caput do art. 83 da Lei nº 9.430, de 27 de dezembro de 1996.
-## 2                                                                                                                                                                                                                                                                                              Estabelece normas gerais de organização, efetivos, material bélico, garantias, convocação e mobilização das polícias militares e corpos de bombeiros militares dos Estados, do Distrito Federal e dos Territórios, e dá outras providências.
-## 3                                                                                                                                                                                                                                                                                                                                                                                                                                                                           Modifica dispositivo do Código Penal, e dá outras providências.
-## 4                                                                                                                                                                                                                                                                                                                                                                                                                                                                          Estabelece critérios para a abertura de novos cursos de Direito.
-## 5 Altera o § 7º do art. 6º da Lei nº 11.101, de 9 de fevereiro de 2005, que &quot;Regula a recuperação judicial, a extrajudicial e a falência do empresário e da sociedade empresária&quot;, para submeter todos os créditos tributários à recuperação judicial.  NOVA EMENTA: Altera as Leis nºs 11.101, de 9 de fevereiro de 2005, 10.522, de 19 de julho de 2002, e 8.929, de 22 de agosto de 1994, para atualizar a legislação referente à recuperação judicial, à recuperação extrajudicial e à falência do empresário e da sociedade empresária
-## 6                                                                                                                                                                                                                                                                                                                                                       Estabelece normas gerais para a simplificação do procedimento de registro de empresários e pessoas jurídicas no âmbito da União, dos Estados, do Distrito Federal e dos Municípios.</code></pre>
+## 1        PL     70 1995
+## 2        PL    505 1991
+## 3        PL   1610 1996
+## 4       PLP     60 1999
+## 5        PL   4076 2001
+## 6        PL   6379 2002
+##                                                                                                                                                                                                                        ementa
+## 1                                                                                                                                Dispõe sobre intervenções cirúrgicas que visem à alteração de sexo e dá outras providências.
+## 2                                                                                    Revoga a alínea &quot;l&quot; do art. 20 do Decreto-lei nº 73, de 21 de novembro de 1966, extinguindo o Seguro Obrigatório de Veículos Automotores
+## 3                                              Dispõe sobre a exploração e o aproveitamento de recursos minerais em terras indígenas, de que tratam os arts. 176, parágrafo 1º, e 231, parágrafo 3º, da Constituição Federal.
+## 4                                                                                         Dispõe sobre a aposentadoria especial para os trabalhadores que exercem atividades que prejudiquem a saúde ou a integridade física.
+## 5 Altera a Lei nº 9.656, de 3 de junho de 1998, que &quot;dispõe sobre os planos e seguros privados de assistência à saúde&quot; incluindo os procedimentos preventivos no rol dos serviços a serem oferecidos pelas empresas do setor.
+## 6                                                                           Altera o § 2º do art. 1º do Decreto-Lei nº 791 de 27 de agosto de 1969, que dispõe sobre o pedágio em rodovias federais e dá outras providências.</code></pre>
 <p>Hoje em dia, todas as redes sociais possuem APIs para consumir os dados dos usuários e postagens. Normalmente essas APIs pedem um cadastro anterior (apesar de gratuitas, em sua maior parte). O R possui diversos pacotes para consumir APIs interessantes:</p>
 <ul>
 <li>Quandl: pacote que fornece diversos dados econômicos de diversos países;</li>
@@ -474,19 +474,19 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>O pacote funciona da seguinte forma: Um string que contem o link é usado como input da função <code>read_html()</code>. A partir daí as funções do pacote <code>rvest</code> podem ser usadas para extrair dados da página. <code>html_table()</code>, por exemplo, extrai dados tabulares da página.</p>
 <p>Algo que torna o Web Scraping muito complexo é que essa tarefa é muito dependente do código-fonte da página. Caso ela sofra mudanças, o código provavelmente não irá mais funcionar. Um exemplo é o que se vê neste post sobre Web Scraping do OLX, que não funciona mais.</p>
 <p>Devido a isso, este material opta por não entrar a fundo no assunto além de mostrar um exemplo superficial abaixo de scraping de uma <a href="https://pt.wikipedia.org/wiki/Campeonato_Brasileiro_de_Futebol_de_2018_-_S%C3%A9rie_A#Classifica%C3%A7%C3%A3o">tabela da Wikipedia</a>:</p>
-<div class="sourceCode" id="cb424"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb424-1" data-line-number="1"><span class="kw">library</span>(rvest)</a>
-<a class="sourceLine" id="cb424-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb424-3" data-line-number="3">url &lt;-<span class="st"> &quot;https://pt.wikipedia.org/wiki/Campeonato_Brasileiro_de_Futebol_de_2018_-_Série_A&quot;</span> <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb424-4" data-line-number="4"><span class="st">  </span><span class="kw">read_html</span>()</a>
-<a class="sourceLine" id="cb424-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb424-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb424-7" data-line-number="7">tb &lt;-<span class="st"> </span><span class="kw">html_table</span>(url, <span class="dt">fill =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb424-8" data-line-number="8">tb &lt;-<span class="st"> </span>tb[[<span class="dv">6</span>]]</a>
-<a class="sourceLine" id="cb424-9" data-line-number="9">tb <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb424-10" data-line-number="10"><span class="st">  </span><span class="kw">as_tibble</span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb424-11" data-line-number="11"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">SG =</span> <span class="kw">ifelse</span>(<span class="kw">str_detect</span>(SG,<span class="st">&quot;</span><span class="ch">\\</span><span class="st">+&quot;</span>),</a>
-<a class="sourceLine" id="cb424-12" data-line-number="12">                    readr<span class="op">::</span><span class="kw">parse_number</span>(SG),</a>
-<a class="sourceLine" id="cb424-13" data-line-number="13">                    <span class="dv">-1</span> <span class="op">*</span><span class="st"> </span>readr<span class="op">::</span><span class="kw">parse_number</span>(SG)))</a></code></pre></div>
+<div class="sourceCode" id="cb430"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb430-1" data-line-number="1"><span class="kw">library</span>(rvest)</a>
+<a class="sourceLine" id="cb430-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb430-3" data-line-number="3">url &lt;-<span class="st"> &quot;https://pt.wikipedia.org/wiki/Campeonato_Brasileiro_de_Futebol_de_2018_-_Série_A&quot;</span> <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb430-4" data-line-number="4"><span class="st">  </span><span class="kw">read_html</span>()</a>
+<a class="sourceLine" id="cb430-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb430-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb430-7" data-line-number="7">tb &lt;-<span class="st"> </span><span class="kw">html_table</span>(url, <span class="dt">fill =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb430-8" data-line-number="8">tb &lt;-<span class="st"> </span>tb[[<span class="dv">6</span>]]</a>
+<a class="sourceLine" id="cb430-9" data-line-number="9">tb <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb430-10" data-line-number="10"><span class="st">  </span><span class="kw">as_tibble</span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb430-11" data-line-number="11"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">SG =</span> <span class="kw">ifelse</span>(<span class="kw">str_detect</span>(SG,<span class="st">&quot;</span><span class="ch">\\</span><span class="st">+&quot;</span>),</a>
+<a class="sourceLine" id="cb430-12" data-line-number="12">                    readr<span class="op">::</span><span class="kw">parse_number</span>(SG),</a>
+<a class="sourceLine" id="cb430-13" data-line-number="13">                    <span class="dv">-1</span> <span class="op">*</span><span class="st"> </span>readr<span class="op">::</span><span class="kw">parse_number</span>(SG)))</a></code></pre></div>
 
 </div>
 </div>

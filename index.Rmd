@@ -32,3 +32,9 @@ Este livro foi criado por Saulo Guerra, Paulo Felipe e Sillas Gonzaga para o cur
 knitr::include_graphics("./imagens/logo.png")
 ```
 
+Mudanças em relação à primeira edição:
+
+* Adicionados novos capítulos: **7 - Dados em strings**, **8 - Trabalhando com datas** e **11 - Estruturas complexas de dados**.  
+* Capítulos revisados, com a inclusão de novos exercícios.  
+* Capítulo *15 - Modelos* ampliado, com a inclusão de conteúdo sobre modelos mais complexos de Machine Learning.  
+
